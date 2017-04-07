@@ -23,10 +23,14 @@ public class RestRegularDictionaryTest {
     private static final String TEST_JSON = "{\"language\": \"en\",\"words\": " +
             "[{\"word\": \"testword\",\"exp\": \"test_exp\",\"frequency\": 0}]," +
             "\"phrases\": [{\"phrase\": \"Test Phrase\",\"exp\": \"phrase_exp\"}]}";
-
     private static final String TEST_JSON2 = "{\"language\": \"de\",\"words\": " +
             "[{\"word\": \"testword2\",\"exp\": \"test_exp2\",\"frequency\": 1}]," +
             "\"phrases\": [{\"phrase\": \"Test Phrase2\",\"exp\": \"phrase_exp2\"}]}";
+
+    private static final String PATCH_JSON = "[{\"operation\": \"SET\",\"document\": " +
+            "{\"language\": \"fr\",\"words\": " +
+            "[{\"word\": \"testword2\",\"exp\": \"test_exp3\",\"frequency\": 2}],\"phrases\": " +
+            "[{\"phrase\": \"Test Phrase2\",\"exp\": \"phrase_exp3\"}]}}]";
 
     private static final String VERSION_STRING = "?version=";
     private static ResourceId resourceId;
@@ -107,6 +111,38 @@ public class RestRegularDictionaryTest {
     }
 
     @Test(dependsOnMethods = "updateRegularDictionary")
+    public void patchRegularDictionary() {
+        //test
+        Response response = given().
+                body(PATCH_JSON).
+                contentType(ContentType.JSON).
+                patch(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+
+        //assert
+        response.then().
+                assertThat().
+                statusCode(equalTo(200)).
+                header("location", startsWith(RESOURCE_URI)).
+                header("location", endsWith(VERSION_STRING + "3"));
+
+        String location = response.getHeader("location");
+        resourceId = UriUtilities.extractResourceId(URI.create(location));
+
+        response = given().
+                get(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+
+        response.then().
+                assertThat().
+                statusCode(equalTo(200)).
+                body("language", equalTo("fr")).
+                body("words.word", hasItem("testword2")).
+                body("words.exp", hasItem("test_exp3")).
+                body("words.frequency", hasItem(2)).
+                body("phrases.phrase", hasItem("Test Phrase2")).
+                body("phrases.exp", hasItem("phrase_exp3"));
+    }
+
+    @Test(dependsOnMethods = "patchRegularDictionary")
     public void deleteRegularDictionary() {
         //test
         String requestUri = ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion();
