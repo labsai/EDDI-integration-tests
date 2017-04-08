@@ -4,8 +4,8 @@ ENV EDDI_BASEURI http://localhost
 ENV EDDI_PORT 7070
 
 RUN mkdir -p /tests/
-COPY . /tests/
-
+COPY tests/ /tests/
+RUN chmod -R 777 /tests/
 WORKDIR /tests/
 
 ENTRYPOINT mvn -Deddi.baseURI=$EDDI_BASEURI -Deddi.port=$EDDI_PORT test

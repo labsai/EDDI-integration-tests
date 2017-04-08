@@ -1,15 +1,13 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/circulate
     docker:
       - image: buildpack-deps:jessie-scm
     steps:
-      - run:
-          - type: shell
-              name: Initialize Working Directory
-              pwd: /
-              command: |
-                mkdir /tests
+      - run: mkdir /tests
+
+      - run: chmod -R 777 /tests/
 
       - run: git clone https://github.com/labsai/EDDI-integration-tests.git /tests
 
