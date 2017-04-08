@@ -4,7 +4,7 @@ ENV EDDI_BASEURI http://localhost
 ENV EDDI_PORT 7070
 
 RUN mkdir -p /tests/
-COPY tests/ /tests/
+COPY . /tests/
 RUN chmod -R 777 /tests/
 WORKDIR /tests/
 

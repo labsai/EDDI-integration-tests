@@ -1,20 +1,16 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/circulate
     docker:
-      - image: circleci:ubuntu-14.04-XL-922-9410082
+      - image: docker:1.13.1-git
+    working_directory: ~/tests
     steps:
-      - run: mkdir /tests
+      - checkout
+      - setup_remote_docker
 
-      - run: chmod -R 777 /tests/
-
-      - run: git clone https://github.com/labsai/EDDI-integration-tests.git /tests
-
-      - run: docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-
-      - run: docker build -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM .
-      - run: docker push -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM
-
-      - run: docker build -t labsai/eddi-integration-tests:latest .
-      - run: docker push -t labsai/eddi-integration-tests:latest
+      - run: |
+          docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+          docker build -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM .
+          docker push -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM
+          docker build -t labsai/eddi-integration-tests:latest .
+          docker push -t labsai/eddi-integration-tests:latest
