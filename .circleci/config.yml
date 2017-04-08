@@ -2,9 +2,16 @@ version: 2
 jobs:
   build:
     docker:
-      - image: openjdk:8
+      - image: buildpack-deps:jessie-scm
     steps:
-      - checkout
+      - run:
+          - type: shell
+              name: Initialize Working Directory
+              pwd: /
+              command: |
+                mkdir /tests
+
+      - run: git clone https://github.com/labsai/EDDI-integration-tests.git /tests
 
       - run: docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 
