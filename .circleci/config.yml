@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: openjdk:8
+    steps:
+      - checkout
+
+      - run: docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+
+      - run: docker build -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM .
+      - run: docker push -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM
+
+      - run: docker build -t labsai/eddi-integration-tests:latest .
+      - run: docker push -t labsai/eddi-integration-tests:latest

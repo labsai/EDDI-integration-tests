@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.net.URI;
+import java.util.Properties;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -37,8 +38,10 @@ public class RestRegularDictionaryTest {
 
     @BeforeTest
     public void setup() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 7070;
+        final Properties props = System.getProperties();
+
+        RestAssured.baseURI = props.containsKey("eddi.baseURI") ? props.getProperty("eddi.baseURI") : "http://localhost";
+        RestAssured.port = props.containsKey("eddi.port") ? Integer.parseInt(props.getProperty("eddi.port")) : 7070;
     }
 
     @Test()
