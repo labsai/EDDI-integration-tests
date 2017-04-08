@@ -8,4 +8,6 @@ COPY . /tests/
 RUN chmod -R 777 /tests/
 WORKDIR /tests/
 
+RUN mvn dependency:resolve
+
 ENTRYPOINT mvn -Deddi.baseURI=$EDDI_BASEURI -Deddi.port=$EDDI_PORT test
