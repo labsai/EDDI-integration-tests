@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/circulate
     docker:
-      - image: circleci:ubuntu-14.04-XXL-1157-04298fb
+      - image: circleci:ubuntu-14.04-XL-922-9410082
     steps:
       - run: mkdir /tests
 
