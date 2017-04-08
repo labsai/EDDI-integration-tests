@@ -8,8 +8,11 @@ jobs:
       - checkout
       - setup_remote_docker
 
-      - run: docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM .
-      - run: docker push -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM
-      - run: docker build -t labsai/eddi-integration-tests:latest .
-      - run: docker push -t labsai/eddi-integration-tests:latest
+      - run: |
+          docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+
+          docker build -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM .
+          docker push labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM
+
+          docker build -t labsai/eddi-integration-tests:latest .
+          docker push labsai/eddi-integration-tests:latest
