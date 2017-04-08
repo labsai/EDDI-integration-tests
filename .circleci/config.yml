@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/circulate
     docker:
-      - image: buildpack-deps:jessie-scm
+      - image: circleci:ubuntu-14.04-XXL-1157-04298fb
     steps:
       - run: mkdir /tests
 
