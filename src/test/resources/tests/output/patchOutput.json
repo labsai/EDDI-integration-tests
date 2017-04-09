@@ -1,0 +1,16 @@
+[
+  {
+    "operation": "SET",
+    "document": {
+      "outputs": [
+        {
+          "key": "welcome",
+          "outputValues": [
+            "Welcome! I am E.D.D.I.--changed-again!"
+          ],
+          "occurrence": 0
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "operation": "SET",
+    "document": {
+      "language": "fr",
+      "words": [
+        {
+          "word": "testword2",
+          "exp": "test_exp3",
+          "frequency": 2
+        }
+      ],
+      "phrases": [
+        {
+          "phrase": "Test Phrase2",
+          "exp": "phrase_exp3"
+        }
+      ]
+    }
+  }
+]

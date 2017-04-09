@@ -1,0 +1,96 @@
+{
+  "behaviorGroups": [
+    {
+      "name": "Smalltalk",
+      "behaviorRules": [
+        {
+          "name": "Welcome_changed",
+          "actions": [
+            "welcome"
+          ],
+          "children": [
+            {
+              "type": "negation",
+              "values": {},
+              "children": [
+                {
+                  "type": "occurrence",
+                  "values": {
+                    "maxOccurrence": "ever",
+                    "behaviorRuleName": "Welcome"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Greeting",
+          "actions": [
+            "greet"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "greeting(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Goodbye",
+          "actions": [
+            "say_goodbye",
+            "CONVERSATION_END"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "goodbye(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Thank",
+          "actions": [
+            "thank"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "thank(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "how are you",
+          "actions": [
+            "how_are_you"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "how_are_you_changed",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

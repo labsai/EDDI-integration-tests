@@ -1,0 +1,47 @@
+{
+  "outputs": [
+    {
+      "key": "welcome",
+      "outputValues": [
+        "Welcome! I am E.D.D.I."
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "greet",
+      "outputValues": [
+        "Hi there! Nice to meet up! :-)",
+        "Hey you!"
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "greet",
+      "outputValues": [
+        "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+      ],
+      "occurrence": 1
+    },
+    {
+      "key": "say_goodbye",
+      "outputValues": [
+        "See you soon!"
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "thank",
+      "outputValues": [
+        "Your Welcome!"
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "how_are_you",
+      "outputValues": [
+        "Pretty good.. having lovely conversations all day long.. :-D"
+      ],
+      "occurrence": 0
+    }
+  ]
+}

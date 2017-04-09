@@ -1,78 +1,42 @@
 package ai.labs.testing.integration;
 
-import ai.labs.testing.ResourceId;
-import ai.labs.testing.UriUtilities;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.Properties;
+import java.io.IOException;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 
 /**
  * @author ginccc
  */
-public class RestRegularDictionaryTest {
-    private static final String RESOURCE_URI =
-            "eddi://ai.labs.regulardictionary/regulardictionarystore/regulardictionaries/";
+public class RestRegularDictionaryTest extends BaseCRUDOperations {
     private static final String ROOT_PATH = "/regulardictionarystore/regulardictionaries/";
-    private static final String TEST_JSON = "{\"language\": \"en\",\"words\": " +
-            "[{\"word\": \"testword\",\"exp\": \"test_exp\",\"frequency\": 0}]," +
-            "\"phrases\": [{\"phrase\": \"Test Phrase\",\"exp\": \"phrase_exp\"}]}";
-    private static final String TEST_JSON2 = "{\"language\": \"de\",\"words\": " +
-            "[{\"word\": \"testword2\",\"exp\": \"test_exp2\",\"frequency\": 1}]," +
-            "\"phrases\": [{\"phrase\": \"Test Phrase2\",\"exp\": \"phrase_exp2\"}]}";
+    private static final String RESOURCE_URI = "eddi://ai.labs.regulardictionary" + ROOT_PATH;
 
-    private static final String PATCH_JSON = "[{\"operation\": \"SET\",\"document\": " +
-            "{\"language\": \"fr\",\"words\": " +
-            "[{\"word\": \"testword2\",\"exp\": \"test_exp3\",\"frequency\": 2}],\"phrases\": " +
-            "[{\"phrase\": \"Test Phrase2\",\"exp\": \"phrase_exp3\"}]}}]";
-
-    private static final String VERSION_STRING = "?version=";
-    private static ResourceId resourceId;
+    private String TEST_JSON;
+    private String TEST_JSON2;
+    private String PATCH_JSON;
 
     @BeforeTest
-    public void setup() {
-        final Properties props = System.getProperties();
+    public void setup() throws IOException {
+        super.setup();
 
-        RestAssured.baseURI = props.containsKey("eddi.baseURI") ? props.getProperty("eddi.baseURI") : "http://localhost";
-        RestAssured.port = props.containsKey("eddi.port") ? Integer.parseInt(props.getProperty("eddi.port")) : 7070;
+        // load test resources
+        TEST_JSON = load("regularDictionary/createRegularDictionary.json");
+        TEST_JSON2 = load("regularDictionary/updateRegularDictionary.json");
+        PATCH_JSON = load("regularDictionary/patchRegularDictionary.json");
     }
 
     @Test()
     public void createRegularDictionary() {
-        //test
-        Response response = given().
-                body(TEST_JSON).
-                contentType(ContentType.JSON).
-                post(ROOT_PATH);
-
-        //assert
-        response.then().
-                assertThat().
-                statusCode(equalTo(201)).
-                header("location", startsWith(RESOURCE_URI)).
-                header("location", endsWith(VERSION_STRING + "1"));
-
-        String location = response.getHeader("location");
-        resourceId = UriUtilities.extractResourceId(URI.create(location));
+        create(TEST_JSON, ROOT_PATH, RESOURCE_URI);
     }
 
     @Test(dependsOnMethods = "createRegularDictionary")
     public void readRegularDictionary() {
-        //test
-        Response response = given().
-                get(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
-
-        //assert
-        response.then().
-                assertThat().
-                statusCode(equalTo(200)).
+        read(ROOT_PATH).
                 body("language", equalTo("en")).
                 body("words.word", hasItem("testword")).
                 body("words.exp", hasItem("test_exp")).
@@ -83,28 +47,7 @@ public class RestRegularDictionaryTest {
 
     @Test(dependsOnMethods = "readRegularDictionary")
     public void updateRegularDictionary() {
-        //test
-        Response response = given().
-                body(TEST_JSON2).
-                contentType(ContentType.JSON).
-                put(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
-
-        //assert
-        response.then().
-                assertThat().
-                statusCode(equalTo(200)).
-                header("location", startsWith(RESOURCE_URI)).
-                header("location", endsWith(VERSION_STRING + "2"));
-
-        String location = response.getHeader("location");
-        resourceId = UriUtilities.extractResourceId(URI.create(location));
-
-        response = given().
-                get(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
-
-        response.then().
-                assertThat().
-                statusCode(equalTo(200)).
+        update(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
                 body("language", equalTo("de")).
                 body("words.word", hasItem("testword2")).
                 body("words.exp", hasItem("test_exp2")).
@@ -115,28 +58,7 @@ public class RestRegularDictionaryTest {
 
     @Test(dependsOnMethods = "updateRegularDictionary")
     public void patchRegularDictionary() {
-        //test
-        Response response = given().
-                body(PATCH_JSON).
-                contentType(ContentType.JSON).
-                patch(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
-
-        //assert
-        response.then().
-                assertThat().
-                statusCode(equalTo(200)).
-                header("location", startsWith(RESOURCE_URI)).
-                header("location", endsWith(VERSION_STRING + "3"));
-
-        String location = response.getHeader("location");
-        resourceId = UriUtilities.extractResourceId(URI.create(location));
-
-        response = given().
-                get(ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
-
-        response.then().
-                assertThat().
-                statusCode(equalTo(200)).
+        patch(PATCH_JSON, ROOT_PATH, RESOURCE_URI).
                 body("language", equalTo("fr")).
                 body("words.word", hasItem("testword2")).
                 body("words.exp", hasItem("test_exp3")).
@@ -145,11 +67,9 @@ public class RestRegularDictionaryTest {
                 body("phrases.exp", hasItem("phrase_exp3"));
     }
 
+
     @Test(dependsOnMethods = "patchRegularDictionary")
     public void deleteRegularDictionary() {
-        //test
-        String requestUri = ROOT_PATH + resourceId.getId() + VERSION_STRING + resourceId.getVersion();
-        given().delete(requestUri).then().statusCode(200);
-        given().get(requestUri).then().statusCode(404);
+        delete(ROOT_PATH);
     }
 }
