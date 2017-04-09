@@ -23,10 +23,10 @@ import static org.hamcrest.Matchers.*;
  */
 class BaseCRUDOperations {
     private static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-    static final String VERSION_STRING = "?version=";
-    ResourceId resourceId;
+    private static final String VERSION_STRING = "?version=";
+    private ResourceId resourceId;
 
-    static File getFile(String filePath) throws FileNotFoundException {
+    private static File getFile(String filePath) throws FileNotFoundException {
         File file;
         URL resource = classLoader.getResource(filePath);
         if (resource != null) {
@@ -37,7 +37,7 @@ class BaseCRUDOperations {
         throw new FileNotFoundException(String.format("FileNotFound: %s", filePath));
     }
 
-    static String toString(File file) throws IOException {
+    private static String toString(File file) throws IOException {
         return new String(Files.readAllBytes(file.toPath()));
     }
 
