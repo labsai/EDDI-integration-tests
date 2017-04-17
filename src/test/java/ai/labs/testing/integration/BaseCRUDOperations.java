@@ -23,8 +23,8 @@ import static org.hamcrest.Matchers.*;
  */
 class BaseCRUDOperations {
     private static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-    private static final String VERSION_STRING = "?version=";
-    private ResourceId resourceId;
+    static final String VERSION_STRING = "?version=";
+    ResourceId resourceId;
 
     private static File getFile(String filePath) throws FileNotFoundException {
         File file;
