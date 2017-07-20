@@ -37,7 +37,7 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
 
     @Test()
     public void createRegularDictionary() {
-        create(REGULAR_DICTIONARY, REGULARDICTIONARY_PATH,
+        assertCreate(REGULAR_DICTIONARY, REGULARDICTIONARY_PATH,
                 "eddi://ai.labs.regulardictionary" + REGULARDICTIONARY_PATH);
         regularDictionaryId = resourceId.getId();
         regualarDictionaryVersion = resourceId.getVersion();
@@ -48,7 +48,7 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
         String parserConfig = PARSER_CONFIG;
         parserConfig = parserConfig.replaceAll("<UNIQUE_ID>", resourceId.getId());
         parserConfig = parserConfig.replace("<VERSION>", resourceId.getVersion().toString());
-        create(parserConfig, ROOT_PATH, RESOURCE_URI);
+        assertCreate(parserConfig, ROOT_PATH, RESOURCE_URI);
     }
 
     @Test(dependsOnMethods = "createSemanticParserConfig")
@@ -104,6 +104,6 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
         given().get(requestUri).then().statusCode(404);
 
         //cleanup parser config
-        delete(ROOT_PATH);
+        assertDelete(ROOT_PATH);
     }
 }

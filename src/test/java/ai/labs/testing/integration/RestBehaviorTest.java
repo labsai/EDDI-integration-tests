@@ -28,24 +28,24 @@ public class RestBehaviorTest extends BaseCRUDOperations {
 
     @Test()
     public void createBehavior() {
-        create(TEST_JSON, ROOT_PATH, RESOURCE_URI);
+        assertCreate(TEST_JSON, ROOT_PATH, RESOURCE_URI);
     }
 
     @Test(dependsOnMethods = "createBehavior")
     public void readBehavior() {
-        read(ROOT_PATH).
+        assertRead(ROOT_PATH).
                 body("behaviorGroups[0].name", equalTo("Smalltalk")).
                 body("behaviorGroups[0].behaviorRules[0].children[0].type", equalTo("negation"));
     }
 
     @Test(dependsOnMethods = "readBehavior")
     public void updateBehavior() {
-        update(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
+        assertUpdate(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
                 body("behaviorGroups[0].behaviorRules[0].name", equalTo("Welcome_changed"));
     }
 
     @Test(dependsOnMethods = "updateBehavior")
     public void deleteBehavior() {
-        delete(ROOT_PATH);
+        assertDelete(ROOT_PATH);
     }
 }

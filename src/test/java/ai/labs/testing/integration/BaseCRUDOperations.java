@@ -45,12 +45,23 @@ class BaseCRUDOperations {
         return toString(getFile("tests/" + filename));
     }
 
-    void create(String body, String path, String resourceUri) {
-        //test
-        Response response = given().
+    public void setup() throws IOException {
+        final Properties props = System.getProperties();
+
+        RestAssured.baseURI = props.containsKey("eddi.baseURI") ? props.getProperty("eddi.baseURI") : "http://localhost";
+        RestAssured.port = props.containsKey("eddi.port") ? Integer.parseInt(props.getProperty("eddi.port")) : 7070;
+    }
+
+    Response create(String body, String path) {
+        return given().
                 body(body).
                 contentType(ContentType.JSON).
                 post(path);
+    }
+
+    void assertCreate(String body, String path, String resourceUri) {
+        //test
+        Response response = create(body, path);
 
         //assert
         response.then().
@@ -63,10 +74,13 @@ class BaseCRUDOperations {
         resourceId = UriUtilities.extractResourceId(URI.create(location));
     }
 
-    ValidatableResponse read(String path) {
+    private Response read(String path) {
+        return given().get(path);
+    }
+
+    ValidatableResponse assertRead(String path) {
         //test
-        Response response = given().
-                get(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+        Response response = read(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
 
         //assert
         return response.then().
@@ -74,12 +88,16 @@ class BaseCRUDOperations {
                 statusCode(equalTo(200));
     }
 
-    ValidatableResponse update(String body, String path, String resourceUri) {
-        //test
-        Response response = given().
+    Response update(String body, String path) {
+        return given().
                 body(body).
                 contentType(ContentType.JSON).
                 put(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+    }
+
+    ValidatableResponse assertUpdate(String body, String path, String resourceUri) {
+        //test
+        Response response = update(body, path);
 
         //assert
         response.then().
@@ -91,20 +109,23 @@ class BaseCRUDOperations {
         String location = response.getHeader("location");
         resourceId = UriUtilities.extractResourceId(URI.create(location));
 
-        response = given().
-                get(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+        response = read(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
 
         return response.then().
                 assertThat().
                 statusCode(equalTo(200));
     }
 
-    ValidatableResponse patch(String body, String path, String resourceUri) {
-        //test
-        Response response = given().
+    Response patch(String body, String path) {
+        return given().
                 body(body).
                 contentType(ContentType.JSON).
                 patch(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+    }
+
+    ValidatableResponse assertPatch(String body, String path, String resourceUri) {
+        //test
+        Response response = patch(body, path);
 
         //assert
         response.then().
@@ -116,25 +137,21 @@ class BaseCRUDOperations {
         String location = response.getHeader("location");
         resourceId = UriUtilities.extractResourceId(URI.create(location));
 
-        response = given().
-                get(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+        response = read(path + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
 
         return response.then().
                 assertThat().
                 statusCode(equalTo(200));
     }
 
-    void delete(String path) {
-        //test
-        String requestUri = path + resourceId.getId() + VERSION_STRING + resourceId.getVersion();
-        given().delete(requestUri).then().statusCode(200);
-        given().get(requestUri).then().statusCode(404);
+    ValidatableResponse delete(String requestUri) {
+        return given().delete(requestUri).then().statusCode(200);
     }
 
-    public void setup() throws IOException {
-        final Properties props = System.getProperties();
-
-        RestAssured.baseURI = props.containsKey("eddi.baseURI") ? props.getProperty("eddi.baseURI") : "http://localhost";
-        RestAssured.port = props.containsKey("eddi.port") ? Integer.parseInt(props.getProperty("eddi.port")) : 7070;
+    void assertDelete(String path) {
+        //test
+        String requestUri = path + resourceId.getId() + VERSION_STRING + resourceId.getVersion();
+        delete(requestUri);
+        read(requestUri).then().statusCode(404);
     }
 }

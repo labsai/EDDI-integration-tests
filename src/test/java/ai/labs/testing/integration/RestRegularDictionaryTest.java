@@ -31,12 +31,12 @@ public class RestRegularDictionaryTest extends BaseCRUDOperations {
 
     @Test()
     public void createRegularDictionary() {
-        create(TEST_JSON, ROOT_PATH, RESOURCE_URI);
+        assertCreate(TEST_JSON, ROOT_PATH, RESOURCE_URI);
     }
 
     @Test(dependsOnMethods = "createRegularDictionary")
     public void readRegularDictionary() {
-        read(ROOT_PATH).
+        assertRead(ROOT_PATH).
                 body("language", equalTo("en")).
                 body("words.word", hasItem("testword")).
                 body("words.exp", hasItem("test_exp")).
@@ -47,7 +47,7 @@ public class RestRegularDictionaryTest extends BaseCRUDOperations {
 
     @Test(dependsOnMethods = "readRegularDictionary")
     public void updateRegularDictionary() {
-        update(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
+        assertUpdate(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
                 body("language", equalTo("de")).
                 body("words.word", hasItem("testword2")).
                 body("words.exp", hasItem("test_exp2")).
@@ -58,7 +58,7 @@ public class RestRegularDictionaryTest extends BaseCRUDOperations {
 
     @Test(dependsOnMethods = "updateRegularDictionary")
     public void patchRegularDictionary() {
-        patch(PATCH_JSON, ROOT_PATH, RESOURCE_URI).
+        assertPatch(PATCH_JSON, ROOT_PATH, RESOURCE_URI).
                 body("language", equalTo("fr")).
                 body("words.word", hasItem("testword2")).
                 body("words.exp", hasItem("test_exp3")).
@@ -70,6 +70,6 @@ public class RestRegularDictionaryTest extends BaseCRUDOperations {
 
     @Test(dependsOnMethods = "patchRegularDictionary")
     public void deleteRegularDictionary() {
-        delete(ROOT_PATH);
+        assertDelete(ROOT_PATH);
     }
 }
