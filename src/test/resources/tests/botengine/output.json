@@ -26,7 +26,20 @@
       "outputValues": [
         "See you soon!"
       ],
+      "quickReplies": [
+        {
+          "value": "Bye, bye!",
+          "expressions": "goodbye(bye_bye)"
+        }
+      ],
       "occurrence": 0
+    },
+    {
+      "key": "say_goodbye",
+      "outputValues": [
+        ":-)"
+      ],
+      "occurrence": 1
     }
   ]
 }

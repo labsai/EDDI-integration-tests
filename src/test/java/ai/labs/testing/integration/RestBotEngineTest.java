@@ -165,6 +165,29 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("redoCacheSize", equalTo(0));
     }
 
+    @Test
+    public void checkQuickReplyConversationLog() {
+        sendUserInput("bye");
+        Response response = getConversationLogResponse(false);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].data[0].value", equalTo("bye")).
+                body("conversationSteps[1].data[1].key", equalTo("actions")).
+                body("conversationSteps[1].data[1].value", equalTo("say_goodbye,CONVERSATION_END")).
+                body("conversationSteps[1].data[2].key", equalTo("output:quickreply:say_goodbye")).
+                body("conversationSteps[1].data[2].value.value", equalTo("Bye, bye!")).
+                body("conversationSteps[1].data[2].value.expressions", equalTo("goodbye(bye_bye)")).
+                body("conversationSteps[1].data[3].key", equalTo("output:final")).
+                body("conversationSteps[1].data[3].value", equalTo("See you soon!")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo("ENDED")).
+                body("redoCacheSize", equalTo(0));
+    }
 
     private void sendUserInput(String userInput) {
         given().
