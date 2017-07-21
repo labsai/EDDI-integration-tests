@@ -29,7 +29,11 @@
       "quickReplies": [
         {
           "value": "Bye, bye!",
-          "expressions": "goodbye(bye_bye)"
+          "expressions": "goodbye(bye_bye), operation(quick_reply)"
+        },
+        {
+          "value": "See you!",
+          "expressions": "goodbye(see_you), operation(quick_reply)"
         }
       ],
       "occurrence": 0
