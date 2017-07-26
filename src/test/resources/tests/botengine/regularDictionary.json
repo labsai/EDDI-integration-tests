@@ -5,12 +5,21 @@
       "word": "hello",
       "exp": "greeting(hello)",
       "frequency": 0
+    },
+    {
+      "word": "bye",
+      "exp": "goodbye(bye)",
+      "frequency": 0
     }
   ],
   "phrases": [
     {
       "phrase": "good afternoon",
       "exp": "greeting(good_afternoon)"
+    },
+    {
+      "phrase": "see you",
+      "exp": "goodbye(see_you)"
     }
   ]
 }
