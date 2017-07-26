@@ -184,8 +184,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkQuickReplyConversationLog() {
-        sendUserInput("bye");
-        Response response = getConversationLogResponse(false);
+        sendUserInput(botResourceId, conversationResourceId, "bye");
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -228,9 +228,9 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].data[2].key", equalTo("expressions:parsed")).
                 body("conversationSteps[1].data[2].value", equalTo("greeting(hi)")).
                 body("conversationSteps[1].data[3].key", equalTo("behavior_rules:success")).
-                body("conversationSteps[1].data[3].value", equalTo("Greeting")).
+                body("conversationSteps[1].data[3].value[0]", equalTo("Greeting")).
                 body("conversationSteps[1].data[4].key", equalTo("actions")).
-                body("conversationSteps[1].data[4].value", equalTo("greet2")).
+                body("conversationSteps[1].data[4].value[0]", equalTo("greet2")).
                 body("conversationSteps[1].data[5].key", equalTo("output:action:greet2")).
                 body("conversationSteps[1].data[5].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("conversationSteps[1].data[6].key", equalTo("output:final")).
