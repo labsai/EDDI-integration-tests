@@ -16,14 +16,11 @@ import java.util.List;
 /**
  * @author ginccc
  */
-public class BotEngineSetup extends BaseCRUDOperations {
+class BotEngineSetup extends BaseCRUDOperations {
     private static final String HEADER_LOCATION = "location";
-    private String REGULAR_DICTIONARY;
-    private String BEHAVIOR;
-    private String OUTPUT;
     private ObjectMapper objectMapper;
 
-    public BotEngineSetup() {
+    BotEngineSetup() {
         setupJsonSerializer();
     }
 
@@ -35,13 +32,13 @@ public class BotEngineSetup extends BaseCRUDOperations {
     }
 
 
-    public URI setupBot(String regularDictionaryPath, String behaviorPath, String outputPath) throws IOException {
+    URI setupBot(String regularDictionaryPath, String behaviorPath, String outputPath) throws IOException {
         super.setup();
 
         // load test resources
-        REGULAR_DICTIONARY = load(regularDictionaryPath);
-        BEHAVIOR = load(behaviorPath);
-        OUTPUT = load(outputPath);
+        String REGULAR_DICTIONARY = load(regularDictionaryPath);
+        String BEHAVIOR = load(behaviorPath);
+        String OUTPUT = load(outputPath);
 
         //create dictionary
         String locationDictionary = createResource(REGULAR_DICTIONARY, "/regulardictionarystore/regulardictionaries");
@@ -76,7 +73,7 @@ public class BotEngineSetup extends BaseCRUDOperations {
 
     private PackageConfiguration.PackageExtension createNormalizerExtension() {
         PackageConfiguration.PackageExtension packageExtension = createExtension("eddi://ai.labs.normalizer");
-        packageExtension.getConfig().put("allowedChars", "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;.,");
+        packageExtension.getConfig().put("allowedChars", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
         packageExtension.getConfig().put("convertUmlaute", "true");
         return packageExtension;
     }

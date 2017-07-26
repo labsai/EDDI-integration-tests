@@ -1,0 +1,64 @@
+{
+  "behaviorGroups": [
+    {
+      "name": "Smalltalk",
+      "behaviorRules": [
+        {
+          "name": "Welcome",
+          "actions": [
+            "welcome2"
+          ],
+          "children": [
+            {
+              "type": "negation",
+              "values": {},
+              "children": [
+                {
+                  "type": "occurrence",
+                  "values": {
+                    "maxOccurrence": "ever",
+                    "behaviorRuleName": "Welcome"
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Greeting",
+          "actions": [
+            "greet2"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "greeting(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Goodbye",
+          "actions": [
+            "say_goodbye2",
+            "CONVERSATION_END"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "goodbye(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
