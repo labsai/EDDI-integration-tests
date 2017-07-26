@@ -1,0 +1,49 @@
+{
+  "outputs": [
+    {
+      "key": "welcome2",
+      "outputValues": [
+        "Welcome! I am E.D.D.I."
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "greet2",
+      "outputValues": [
+        "Hi there! Nice to meet up! :-)"
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "greet2",
+      "outputValues": [
+        "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+      ],
+      "occurrence": 1
+    },
+    {
+      "key": "say_goodbye2",
+      "outputValues": [
+        "See you soon!"
+      ],
+      "quickReplies": [
+        {
+          "value": "Bye, bye!",
+          "expressions": "goodbye(bye_bye), operation(quick_reply)"
+        },
+        {
+          "value": "See you!",
+          "expressions": "goodbye(see_you), operation(quick_reply)"
+        }
+      ],
+      "occurrence": 0
+    },
+    {
+      "key": "say_goodbye2",
+      "outputValues": [
+        ":-)"
+      ],
+      "occurrence": 1
+    }
+  ]
+}
