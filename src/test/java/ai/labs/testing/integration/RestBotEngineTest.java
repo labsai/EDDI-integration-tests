@@ -25,6 +25,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     private static final String DEPLOY_PATH = "administration/unrestricted/deploy/%s?version=%s";
     private static final String DEPLOYMENT_STATUS_PATH = "administration/unrestricted/deploymentstatus/%s?version=%s";
     private ResourceId botResourceId;
+    private ResourceId bot2ResourceId;
     private ResourceId conversationResourceId;
 
     public enum Status {
@@ -38,17 +39,33 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     public void setup() throws IOException {
         super.setup();
         try {
-            URI botLocationUri = new BotEngineSetup().setupBot();
-            botResourceId = UriUtilities.extractResourceId(botLocationUri);
-            deployBot(botResourceId.getId(), botResourceId.getVersion());
+            botResourceId = deployBot("botengine/regularDictionary.json",
+                    "botengine/behavior.json",
+                    "botengine/output.json");
+
+            bot2ResourceId = deployBot(
+                    "botengine/regularDictionary2.json",
+                    "botengine/behavior2.json",
+                    "botengine/output2.json");
         } catch (InterruptedException e) {
             throw new IOException(e.getLocalizedMessage(), e);
         }
     }
 
+    ResourceId deployBot(String regularDictionaryPath, String behaviorPath, String outputPath) throws IOException, InterruptedException {
+        URI botLocationUri = new BotEngineSetup().setupBot(regularDictionaryPath, behaviorPath, outputPath);
+        ResourceId resourceId = UriUtilities.extractResourceId(botLocationUri);
+        deployBot(resourceId.getId(), resourceId.getVersion());
+        log.info(String.format("bot (id=%s , version=%s) has been deployed",
+                resourceId.getId(),
+                resourceId.getVersion()));
+
+        return resourceId;
+    }
+
     @BeforeMethod
     public void beforeMethod() throws IOException {
-        createConversation(botResourceId.getId());
+        conversationResourceId = createConversation(botResourceId.getId());
     }
 
     private void deployBot(String id, Integer version) throws InterruptedException {
@@ -68,15 +85,15 @@ public class RestBotEngineTest extends BaseCRUDOperations {
         }
     }
 
-    private void createConversation(String id) {
+    private ResourceId createConversation(String id) {
         Response response = given().post("bots/unrestricted/" + id);
         String locationConversation = response.getHeader(HEADER_LOCATION);
-        conversationResourceId = UriUtilities.extractResourceId(URI.create(locationConversation));
+        return UriUtilities.extractResourceId(URI.create(locationConversation));
     }
 
     @Test
     public void checkWelcomeMessage() {
-        Response response = getConversationLogResponse(false);
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -94,8 +111,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkHelloInputSimpleConversationLog() {
-        sendUserInput("hello");
-        Response response = getConversationLogResponse(false);
+        sendUserInput(botResourceId, conversationResourceId, "hello");
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -115,9 +132,9 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkSecondTimeHelloInputSimpleConversationLog() {
-        sendUserInput("hello");
-        sendUserInput("hello");
-        Response response = getConversationLogResponse(false);
+        sendUserInput(botResourceId, conversationResourceId, "hello");
+        sendUserInput(botResourceId, conversationResourceId, "hello");
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -138,8 +155,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkHelloInputComplexConversationLog() {
-        sendUserInput("hello");
-        Response response = getConversationLogResponse(true);
+        sendUserInput(botResourceId, conversationResourceId, "hello");
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
 
         response.then().assertThat().
                 statusCode(200).
@@ -166,14 +183,45 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
 
-    private void sendUserInput(String userInput) {
+    @Test
+    public void checkHelloInputComplexConversationLogWithSecondBotDeployed() {
+        ResourceId conversationResourceId2 = createConversation(bot2ResourceId.getId());
+        sendUserInput(bot2ResourceId, conversationResourceId2, "hi");
+        Response response = getConversationLogResponse(bot2ResourceId, conversationResourceId2, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(bot2ResourceId.getId())).
+                body("botVersion", equalTo(bot2ResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].data[0].value", equalTo("hi")).
+                body("conversationSteps[1].data[1].key", equalTo("input:formatted")).
+                body("conversationSteps[1].data[1].value", equalTo("hi")).
+                body("conversationSteps[1].data[2].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].data[2].value", equalTo("greeting(hi)")).
+                body("conversationSteps[1].data[3].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].data[3].value", equalTo("Greeting")).
+                body("conversationSteps[1].data[4].key", equalTo("actions")).
+                body("conversationSteps[1].data[4].value", equalTo("greet2")).
+                body("conversationSteps[1].data[5].key", equalTo("output:action:greet2")).
+                body("conversationSteps[1].data[5].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].data[6].key", equalTo("output:final")).
+                body("conversationSteps[1].data[6].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
+
+    private void sendUserInput(ResourceId resourceId, ResourceId conversationResourceId, String userInput) {
         given().
                 contentType(ContentType.TEXT).
                 body(userInput).
-                post(String.format("bots/unrestricted/%s/%s", botResourceId.getId(), conversationResourceId.getId()));
+                post(String.format("bots/unrestricted/%s/%s", resourceId.getId(), conversationResourceId.getId()));
     }
 
-    private Response getConversationLogResponse(boolean includeAll) {
+    private Response getConversationLogResponse(ResourceId botResourceId, ResourceId conversationResourceId, boolean includeAll) {
         return given().
                 contentType(ContentType.JSON).
                 get(String.format("bots/unrestricted/%s/%s?includeAll=%s", botResourceId.getId(),

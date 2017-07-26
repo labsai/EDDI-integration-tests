@@ -35,13 +35,13 @@ public class BotEngineSetup extends BaseCRUDOperations {
     }
 
 
-    public URI setupBot() throws IOException {
+    public URI setupBot(String regularDictionaryPath, String behaviorPath, String outputPath) throws IOException {
         super.setup();
 
         // load test resources
-        REGULAR_DICTIONARY = load("botengine/regularDictionary.json");
-        BEHAVIOR = load("botengine/behavior.json");
-        OUTPUT = load("botengine/output.json");
+        REGULAR_DICTIONARY = load(regularDictionaryPath);
+        BEHAVIOR = load(behaviorPath);
+        OUTPUT = load(outputPath);
 
         //create dictionary
         String locationDictionary = createResource(REGULAR_DICTIONARY, "/regulardictionarystore/regulardictionaries");
