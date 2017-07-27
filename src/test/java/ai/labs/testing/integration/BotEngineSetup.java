@@ -2,13 +2,9 @@ package ai.labs.testing.integration;
 
 import ai.labs.testing.model.BotConfiguration;
 import ai.labs.testing.model.PackageConfiguration;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import io.restassured.response.Response;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +14,10 @@ import java.util.List;
  */
 class BotEngineSetup extends BaseCRUDOperations {
     private static final String HEADER_LOCATION = "location";
-    private ObjectMapper objectMapper;
+    private final JsonSerialization jsonSerialization;
 
     BotEngineSetup() {
-        setupJsonSerializer();
-    }
-
-    private void setupJsonSerializer() {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        jsonSerialization = JsonSerialization.getInstance();
     }
 
 
@@ -55,13 +44,13 @@ class BotEngineSetup extends BaseCRUDOperations {
         packageConfig.getPackageExtensions().add(createParserExtension(locationDictionary));
         packageConfig.getPackageExtensions().add(createBehaviorExtension(locationBehavior));
         packageConfig.getPackageExtensions().add(createOutputExtension(locationOutput));
-        String locationPackage = createResource(toJson(packageConfig), "/packagestore/packages");
+        String locationPackage = createResource(jsonSerialization.toJson(packageConfig), "/packagestore/packages");
 
 
         //createBot
         BotConfiguration botConfig = new BotConfiguration();
         botConfig.getPackages().add(URI.create(locationPackage));
-        return URI.create(createResource(toJson(botConfig), "/botstore/bots"));
+        return URI.create(createResource(jsonSerialization.toJson(botConfig), "/botstore/bots"));
     }
 
     private PackageConfiguration.PackageExtension createExtension(String type) {
@@ -124,11 +113,5 @@ class BotEngineSetup extends BaseCRUDOperations {
     private String createResource(String body, String resourceUri) {
         Response response = create(body, resourceUri);
         return response.getHeader(HEADER_LOCATION);
-    }
-
-    private String toJson(Object obj) throws IOException {
-        StringWriter writer = new StringWriter();
-        objectMapper.writeValue(writer, obj);
-        return writer.toString();
     }
 }

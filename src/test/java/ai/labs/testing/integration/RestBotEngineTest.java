@@ -2,6 +2,7 @@ package ai.labs.testing.integration;
 
 import ai.labs.testing.ResourceId;
 import ai.labs.testing.UriUtilities;
+import ai.labs.testing.model.InputData;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -24,6 +27,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     private static final String HEADER_LOCATION = "location";
     private static final String DEPLOY_PATH = "administration/unrestricted/deploy/%s?version=%s";
     private static final String DEPLOYMENT_STATUS_PATH = "administration/unrestricted/deploymentstatus/%s?version=%s";
+    private final JsonSerialization jsonSerialization;
     private ResourceId botResourceId;
     private ResourceId bot2ResourceId;
     private ResourceId conversationResourceId;
@@ -33,6 +37,10 @@ public class RestBotEngineTest extends BaseCRUDOperations {
         IN_PROGRESS,
         //NOT_FOUND,
         ERROR
+    }
+
+    public RestBotEngineTest() {
+        jsonSerialization = JsonSerialization.getInstance();
     }
 
     @BeforeTest
@@ -299,11 +307,143 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("redoCacheSize", equalTo(0));
     }
 
+    @Test
+    public void testStringContextSendWithInput() throws IOException {
+        Map<String, InputData.Context> contextMap = new HashMap<>();
+        InputData.Context context = new InputData.Context(
+                InputData.Context.ContextType.string, "someContextValue");
+        contextMap.put("someContextKeyString", context);
+        InputData inputData = new InputData("hello", contextMap);
+        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
+
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].data[0].value", equalTo("hello")).
+                body("conversationSteps[1].data[1].key", equalTo("context:someContextKeyString")).
+                body("conversationSteps[1].data[1].value.type", equalTo("string")).
+                body("conversationSteps[1].data[1].value.value", equalTo("someContextValue")).
+                body("conversationSteps[1].data[2].key", equalTo("input:formatted")).
+                body("conversationSteps[1].data[2].value", equalTo("hello")).
+                body("conversationSteps[1].data[3].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].data[3].value", equalTo("greeting(hello)")).
+                body("conversationSteps[1].data[4].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].data[4].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].data[4].value[1]", equalTo("ContextReaction1")).
+                body("conversationSteps[1].data[5].key", equalTo("actions")).
+                body("conversationSteps[1].data[5].value[0]", equalTo("greet")).
+                body("conversationSteps[1].data[5].value[1]", equalTo("acknowledged_context1")).
+                body("conversationSteps[1].data[6].key", equalTo("output:action:greet")).
+                body("conversationSteps[1].data[6].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].data[7].key", equalTo("output:final")).
+                body("conversationSteps[1].data[7].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
+    @Test
+    public void testExpressionContextSendWithInput() throws IOException {
+        Map<String, InputData.Context> contextMap = new HashMap<>();
+        InputData.Context context = new InputData.Context(
+                InputData.Context.ContextType.expressions, "expression(someValue), expression2(someOtherValue)");
+        contextMap.put("someContextKeyExpressions", context);
+        InputData inputData = new InputData("hello", contextMap);
+        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
+
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].data[0].value", equalTo("hello")).
+                body("conversationSteps[1].data[1].key", equalTo("context:someContextKeyExpressions")).
+                body("conversationSteps[1].data[1].value.type", equalTo("expressions")).
+                body("conversationSteps[1].data[1].value.value", equalTo("expression(someValue), expression2(someOtherValue)")).
+                body("conversationSteps[1].data[2].key", equalTo("input:formatted")).
+                body("conversationSteps[1].data[2].value", equalTo("hello")).
+                body("conversationSteps[1].data[3].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].data[3].value", equalTo("greeting(hello)")).
+                body("conversationSteps[1].data[4].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].data[4].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].data[4].value[1]", equalTo("ContextReaction2")).
+                body("conversationSteps[1].data[5].key", equalTo("actions")).
+                body("conversationSteps[1].data[5].value[0]", equalTo("greet")).
+                body("conversationSteps[1].data[5].value[1]", equalTo("acknowledged_context2")).
+                body("conversationSteps[1].data[6].key", equalTo("output:action:greet")).
+                body("conversationSteps[1].data[6].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].data[7].key", equalTo("output:final")).
+                body("conversationSteps[1].data[7].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
+    @Test
+    public void testObjectContextSendWithInput() throws IOException {
+        Map<String, InputData.Context> contextMap = new HashMap<>();
+        Object valueObject = jsonSerialization.toObject("{\"key\":\"value\"}", Object.class);
+        InputData.Context context = new InputData.Context(
+                InputData.Context.ContextType.object, valueObject);
+        contextMap.put("someContextKeyObject", context);
+        InputData inputData = new InputData("hello", contextMap);
+        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
+
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].data[0].value", equalTo("hello")).
+                body("conversationSteps[1].data[1].key", equalTo("context:someContextKeyObject")).
+                body("conversationSteps[1].data[1].value.type", equalTo("object")).
+                body("conversationSteps[1].data[1].value.value.key", equalTo("value")).
+                body("conversationSteps[1].data[2].key", equalTo("input:formatted")).
+                body("conversationSteps[1].data[2].value", equalTo("hello")).
+                body("conversationSteps[1].data[3].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].data[3].value", equalTo("greeting(hello)")).
+                body("conversationSteps[1].data[4].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].data[4].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].data[4].value[1]", equalTo("ContextReaction3")).
+                body("conversationSteps[1].data[5].key", equalTo("actions")).
+                body("conversationSteps[1].data[5].value[0]", equalTo("greet")).
+                body("conversationSteps[1].data[5].value[1]", equalTo("acknowledged_context3")).
+                body("conversationSteps[1].data[6].key", equalTo("output:action:greet")).
+                body("conversationSteps[1].data[6].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].data[7].key", equalTo("output:final")).
+                body("conversationSteps[1].data[7].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
     private void sendUserInput(ResourceId resourceId, ResourceId conversationResourceId, String userInput) {
         given().
                 contentType(ContentType.TEXT).
                 body(userInput).
                 post(String.format("bots/unrestricted/%s/%s", resourceId.getId(), conversationResourceId.getId()));
+    }
+
+    private void sendUserInputWithContext(ResourceId resourceId,
+                                          ResourceId conversationResourceId,
+                                          InputData inputData) throws IOException {
+        given().
+                contentType(ContentType.JSON).
+                body(jsonSerialization.toJson(inputData)).
+                post(String.format("bots/unrestricted/%s/%s",
+                        resourceId.getId(),
+                        conversationResourceId.getId()));
     }
 
     private Response getConversationLogResponse(ResourceId botResourceId, ResourceId conversationResourceId, boolean includeAll) {

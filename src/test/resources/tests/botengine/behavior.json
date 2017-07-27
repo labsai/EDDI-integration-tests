@@ -59,6 +59,64 @@
           ]
         }
       ]
+    },
+    {
+      "name": "ContextStuff",
+      "behaviorRules": [
+        {
+          "name": "ContextReaction1",
+          "actions": [
+            "acknowledged_context1"
+          ],
+          "children": [
+            {
+              "type": "contextmatcher",
+              "values": {
+                "contextKey": "someContextKeyString",
+                "contextType": "string",
+                "string": "someContextValue"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ContextReaction2",
+          "actions": [
+            "acknowledged_context2"
+          ],
+          "children": [
+            {
+              "type": "contextmatcher",
+              "values": {
+                "contextKey": "someContextKeyExpressions",
+                "contextType": "expressions",
+                "expressions": "expression(someValue), expression2(someOtherValue)"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ContextReaction3",
+          "actions": [
+            "acknowledged_context3"
+          ],
+          "children": [
+            {
+              "type": "contextmatcher",
+              "values": {
+                "contextKey": "someContextKeyObject",
+                "contextType": "object",
+                "object": "{\"key\": \"value\"}",
+                "objectKeyPath": "key",
+                "objectValue": "value"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }
