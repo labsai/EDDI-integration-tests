@@ -9,6 +9,7 @@ jobs:
       - setup_remote_docker
 
       - run: |
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
           docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 
           docker build -t labsai/eddi-integration-tests:b$CIRCLE_BUILD_NUM .
@@ -19,3 +20,4 @@ jobs:
 
           docker build -t labsai/eddi-integration-tests:latest .
           docker push labsai/eddi-integration-tests:latest
+          fi
