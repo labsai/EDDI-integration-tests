@@ -22,6 +22,13 @@
       "occurrence": 1
     },
     {
+      "key": "greet_personally",
+      "outputValues": [
+        "Hello [[${userInfo.username}]]! Nice to meet you! :-)"
+      ],
+      "occurrence": 0
+    },
+    {
       "key": "say_goodbye",
       "outputValues": [
         "See you soon!"

@@ -26,6 +26,31 @@
           ]
         },
         {
+          "name": "Personal_Greeting",
+          "actions": [
+            "greet_personally"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "greeting(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            },
+            {
+              "type": "contextmatcher",
+              "values": {
+                "contextKey": "userInfo",
+                "contextType": "object",
+                "objectKeyPath": "username"
+              },
+              "children": []
+            }
+          ]
+        },
+        {
           "name": "Greeting",
           "actions": [
             "greet"
@@ -108,7 +133,6 @@
               "values": {
                 "contextKey": "someContextKeyObject",
                 "contextType": "object",
-                "object": "{\"key\": \"value\"}",
                 "objectKeyPath": "key",
                 "objectValue": "value"
               },
