@@ -44,6 +44,7 @@ class BotEngineSetup extends BaseCRUDOperations {
         packageConfig.getPackageExtensions().add(createParserExtension(locationDictionary));
         packageConfig.getPackageExtensions().add(createBehaviorExtension(locationBehavior));
         packageConfig.getPackageExtensions().add(createOutputExtension(locationOutput));
+        packageConfig.getPackageExtensions().add(createTemplateExtension());
         String locationPackage = createResource(jsonSerialization.toJson(packageConfig), "/packagestore/packages");
 
 
@@ -108,6 +109,10 @@ class BotEngineSetup extends BaseCRUDOperations {
         PackageConfiguration.PackageExtension extension = createExtension("eddi://ai.labs.output");
         extension.getConfig().put("uri", locationOutput);
         return extension;
+    }
+
+    private PackageConfiguration.PackageExtension createTemplateExtension() {
+        return createExtension("eddi://ai.labs.templating");
     }
 
     private String createResource(String body, String resourceUri) {
