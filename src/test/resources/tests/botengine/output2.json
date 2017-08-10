@@ -1,30 +1,50 @@
 {
-  "outputs": [
+  "outputSet": [
     {
-      "key": "welcome2",
-      "outputValues": [
-        "Welcome! I am E.D.D.I."
+      "action": "welcome2",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Welcome! I am E.D.D.I."
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "greet2",
-      "outputValues": [
-        "Hi there! Nice to meet up! :-)"
+      "action": "greet2",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Hi there! Nice to meet up! :-)"
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "greet2",
-      "outputValues": [
-        "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+      "action": "greet2",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+          ]
+        }
       ],
-      "occurrence": 1
+      "occurred": 1
     },
     {
-      "key": "say_goodbye2",
-      "outputValues": [
-        "See you soon!"
+      "action": "say_goodbye2",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "See you soon!"
+          ]
+        }
       ],
       "quickReplies": [
         {
@@ -36,14 +56,19 @@
           "expressions": "goodbye(see_you), operation(quick_reply)"
         }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "say_goodbye2",
-      "outputValues": [
-        ":-)"
+      "action": "say_goodbye2",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            ":-)"
+          ]
+        }
       ],
-      "occurrence": 1
+      "occurred": 1
     }
   ]
 }

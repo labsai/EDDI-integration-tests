@@ -1,47 +1,77 @@
 {
-  "outputs": [
+  "outputSet": [
     {
-      "key": "welcome",
-      "outputValues": [
-        "Welcome! I am E.D.D.I."
+      "action": "welcome",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Welcome! I am E.D.D.I."
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "greet",
-      "outputValues": [
-        "Hi there! Nice to meet up! :-)",
-        "Hey you!"
+      "action": "greet",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Hi there! Nice to meet up! :-)",
+            "Hey you!"
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "greet",
-      "outputValues": [
-        "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+      "action": "greet",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+          ]
+        }
       ],
-      "occurrence": 1
+      "occurred": 1
     },
     {
-      "key": "say_goodbye",
-      "outputValues": [
-        "See you soon!"
+      "action": "say_goodbye",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "See you soon!"
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "thank",
-      "outputValues": [
-        "Your Welcome!"
+      "action": "thank",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Your Welcome!"
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     },
     {
-      "key": "how_are_you",
-      "outputValues": [
-        "Pretty good.. having lovely conversations all day long.. :-D"
+      "action": "how_are_you",
+      "outputs": [
+        {
+          "type": "text",
+          "valueAlternatives": [
+            "Pretty good.. having lovely conversations all day long.. :-D"
+          ]
+        }
       ],
-      "occurrence": 0
+      "occurred": 0
     }
   ]
 }

@@ -2,13 +2,18 @@
   {
     "operation": "SET",
     "document": {
-      "outputs": [
+      "outputSet": [
         {
-          "key": "welcome",
-          "outputValues": [
-            "Welcome! I am E.D.D.I.--changed-again!"
+          "action": "welcome",
+          "outputs": [
+            {
+              "type": "text",
+              "valueAlternatives": [
+                "Welcome! I am E.D.D.I.--changed-again!"
+              ]
+            }
           ],
-          "occurrence": 0
+          "occurred": 0
         }
       ]
     }
