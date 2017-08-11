@@ -2,6 +2,7 @@
   "outputSet": [
     {
       "action": "welcome",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -9,11 +10,11 @@
             "Welcome! I am E.D.D.I."
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "greet",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -22,11 +23,11 @@
             "Hey you!"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "greet",
+      "timesOccurred": 1,
       "outputs": [
         {
           "type": "text",
@@ -34,11 +35,11 @@
             "Did we already say hi ?! Well, twice is better than not at all! ;-)"
           ]
         }
-      ],
-      "occurred": 1
+      ]
     },
     {
       "action": "say_goodbye",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -46,11 +47,11 @@
             "See you soon!"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "thank",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -58,11 +59,11 @@
             "Your Welcome!"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "how_are_you",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -70,8 +71,7 @@
             "Pretty good.. having lovely conversations all day long.. :-D"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     }
   ]
 }

@@ -2,6 +2,7 @@
   "outputSet": [
     {
       "action": "welcome",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -9,11 +10,11 @@
             "Welcome! I am E.D.D.I."
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "greet",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -21,11 +22,11 @@
             "Hi there! Nice to meet up! :-)"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "greet",
+      "timesOccurred": 1,
       "outputs": [
         {
           "type": "text",
@@ -33,11 +34,11 @@
             "Did we already say hi ?! Well, twice is better than not at all! ;-)"
           ]
         }
-      ],
-      "occurred": 1
+      ]
     },
     {
       "action": "greet_personally",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -45,11 +46,11 @@
             "Hello [[${userInfo.username}]]! Nice to meet you! :-)"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "say_goodbye",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -67,11 +68,11 @@
           "value": "See you!",
           "expressions": "goodbye(see_you), operation(quick_reply)"
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "say_goodbye",
+      "timesOccurred": 1,
       "outputs": [
         {
           "type": "text",
@@ -85,8 +86,7 @@
           "value": "Bye, bye [[${userInfo.username}]]!!",
           "expressions": "goodbye(bye_bye), operation(quick_reply)"
         }
-      ],
-      "occurred": 1
+      ]
     }
   ]
 }
