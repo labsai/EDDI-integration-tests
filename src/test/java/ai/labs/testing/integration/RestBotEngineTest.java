@@ -102,18 +102,21 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @Test
-    public void checkWelcomeMessage() {
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
+    public void checkWelcomeMessage() throws InterruptedException {
+        //since asynchronous,getting the conversationLog could be to fast
+        // if the machine on which eddi will be executed is too slow, thus wait a second to be sure it is done
+        Thread.sleep(1000L);
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(1)).
-                body("conversationSteps[0].data[0].key", equalTo("actions")).
-                body("conversationSteps[0].data[0].value[0]", equalTo("welcome")).
-                body("conversationSteps[0].data[1].key", equalTo("output:text:welcome")).
-                body("conversationSteps[0].data[1].value", equalTo("Welcome! I am E.D.D.I.")).
+                body("conversationSteps[0].conversationStep[0].key", equalTo("actions")).
+                body("conversationSteps[0].conversationStep[0].value[0]", equalTo("welcome")).
+                body("conversationSteps[0].conversationStep[1].key", equalTo("output:text:welcome")).
+                body("conversationSteps[0].conversationStep[1].value", equalTo("Welcome! I am E.D.D.I.")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -121,18 +124,17 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkNormalizer() {
-        sendUserInput(botResourceId, conversationResourceId, "hello123");
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "hello123", true, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
-                body("conversationSteps[1].data[0].value", equalTo("hello123")).
-                body("conversationSteps[1].data[1].key", equalTo("input:formatted")).
-                body("conversationSteps[1].data[1].value", equalTo("hello")).
+                body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].conversationStep[0].value", equalTo("hello123")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("input:formatted")).
+                body("conversationSteps[1].conversationStep[1].value", equalTo("hello")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -140,21 +142,41 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkWordInputSimpleConversationLog() {
-        sendUserInput(botResourceId, conversationResourceId, "hello");
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "hello", false, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data", hasSize(3)).
-                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
-                body("conversationSteps[1].data[0].value", equalTo("hello")).
-                body("conversationSteps[1].data[1].key", equalTo("actions")).
-                body("conversationSteps[1].data[1].value[0]", equalTo("greet")).
-                body("conversationSteps[1].data[2].key", equalTo("output:text:greet")).
-                body("conversationSteps[1].data[2].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].conversationStep", hasSize(3)).
+                body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].conversationStep[0].value", equalTo("hello")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[1].value[0]", equalTo("greet")).
+                body("conversationSteps[1].conversationStep[2].key", equalTo("output:text:greet")).
+                body("conversationSteps[1].conversationStep[2].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
+    @Test
+    public void checkWordInputSimpleConversationLogReturningOnlyCurrentStep() {
+        Response response = sendUserInput(botResourceId, conversationResourceId, "hello", false, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(1)).
+                body("conversationSteps[0].conversationStep", hasSize(3)).
+                body("conversationSteps[0].conversationStep[0].key", equalTo("input:initial")).
+                body("conversationSteps[0].conversationStep[0].value", equalTo("hello")).
+                body("conversationSteps[0].conversationStep[1].key", equalTo("actions")).
+                body("conversationSteps[0].conversationStep[1].value[0]", equalTo("greet")).
+                body("conversationSteps[0].conversationStep[2].key", equalTo("output:text:greet")).
+                body("conversationSteps[0].conversationStep[2].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -162,18 +184,17 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkSecondTimeWordInputSimpleConversationLog() {
-        sendUserInput(botResourceId, conversationResourceId, "hello");
-        sendUserInput(botResourceId, conversationResourceId, "hello");
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
+        sendUserInput(botResourceId, conversationResourceId, "hello", false, false);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "hello", false, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(3)).
-                body("conversationSteps[2].data", hasSize(3)).
-                body("conversationSteps[2].data[2].key", equalTo("output:text:greet")).
-                body("conversationSteps[2].data[2].value", equalTo("Did we already say hi ?! Well, twice is better than not at all! ;-)")).
+                body("conversationSteps[2].conversationStep", hasSize(3)).
+                body("conversationSteps[2].conversationStep[2].key", equalTo("output:text:greet")).
+                body("conversationSteps[2].conversationStep[2].value", equalTo("Did we already say hi ?! Well, twice is better than not at all! ;-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -181,26 +202,25 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkWordInputComplexConversationLog() {
-        sendUserInput(botResourceId, conversationResourceId, "hello");
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "hello", true, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
-                body("conversationSteps[1].data[0].value", equalTo("hello")).
-                body("conversationSteps[1].data[1].key", equalTo("input:formatted")).
-                body("conversationSteps[1].data[1].value", equalTo("hello")).
-                body("conversationSteps[1].data[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[1].data[2].value", equalTo("greeting(hello)")).
-                body("conversationSteps[1].data[3].key", equalTo("behavior_rules:success")).
-                body("conversationSteps[1].data[3].value[0]", equalTo("Greeting")).
-                body("conversationSteps[1].data[4].key", equalTo("actions")).
-                body("conversationSteps[1].data[4].value[0]", equalTo("greet")).
-                body("conversationSteps[1].data[5].key", equalTo("output:text:greet")).
-                body("conversationSteps[1].data[5].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].conversationStep[0].value", equalTo("hello")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("input:formatted")).
+                body("conversationSteps[1].conversationStep[1].value", equalTo("hello")).
+                body("conversationSteps[1].conversationStep[2].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(hello)")).
+                body("conversationSteps[1].conversationStep[3].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].conversationStep[3].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].conversationStep[4].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[4].value[0]", equalTo("greet")).
+                body("conversationSteps[1].conversationStep[5].key", equalTo("output:text:greet")).
+                body("conversationSteps[1].conversationStep[5].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -208,21 +228,20 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkPhraseInputComplexConversationLog() {
-        sendUserInput(botResourceId, conversationResourceId, "good afternoon");
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "good afternoon", true, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data", hasSize(8)).
-                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
-                body("conversationSteps[1].data[0].value", equalTo("good afternoon")).
-                body("conversationSteps[1].data[1].key", equalTo("input:formatted")).
-                body("conversationSteps[1].data[1].value", equalTo("good afternoon")).
-                body("conversationSteps[1].data[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[1].data[2].value", equalTo("greeting(good_afternoon)")).
+                body("conversationSteps[1].conversationStep", hasSize(8)).
+                body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].conversationStep[0].value", equalTo("good afternoon")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("input:formatted")).
+                body("conversationSteps[1].conversationStep[1].value", equalTo("good afternoon")).
+                body("conversationSteps[1].conversationStep[2].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(good_afternoon)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -230,20 +249,19 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkQuickReplyConversationLog() {
-        sendUserInput(botResourceId, conversationResourceId, "bye");
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "bye", false, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data", hasSize(4)).
-                body("conversationSteps[1].data[3].key", equalTo("quickReplies:say_goodbye")).
-                body("conversationSteps[1].data[3].value[0].value", equalTo("Bye, bye!")).
-                body("conversationSteps[1].data[3].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
-                body("conversationSteps[1].data[3].value[1].value", equalTo("See you!")).
-                body("conversationSteps[1].data[3].value[1].expressions", equalTo("goodbye(see_you), operation(quick_reply)")).body("environment", equalTo("unrestricted")).
+                body("conversationSteps[1].conversationStep", hasSize(4)).
+                body("conversationSteps[1].conversationStep[3].key", equalTo("quickReplies:say_goodbye")).
+                body("conversationSteps[1].conversationStep[3].value[0].value", equalTo("Bye, bye!")).
+                body("conversationSteps[1].conversationStep[3].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
+                body("conversationSteps[1].conversationStep[3].value[1].value", equalTo("See you!")).
+                body("conversationSteps[1].conversationStep[3].value[1].expressions", equalTo("goodbye(see_you), operation(quick_reply)")).body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo("ENDED")).
                 body("redoCacheSize", equalTo(0));
     }
@@ -251,26 +269,25 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     @Test
     public void checkWordInputComplexConversationLogWithSecondBotDeployed() {
         ResourceId conversationResourceId2 = createConversation(bot2ResourceId.getId());
-        sendUserInput(bot2ResourceId, conversationResourceId2, "hi");
-        Response response = getConversationLogResponse(bot2ResourceId, conversationResourceId2, true);
+        Response response = sendUserInput(bot2ResourceId, conversationResourceId2, "hi", true, false);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(bot2ResourceId.getId())).
                 body("botVersion", equalTo(bot2ResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[0].key", equalTo("input:initial")).
-                body("conversationSteps[1].data[0].value", equalTo("hi")).
-                body("conversationSteps[1].data[1].key", equalTo("input:formatted")).
-                body("conversationSteps[1].data[1].value", equalTo("hi")).
-                body("conversationSteps[1].data[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[1].data[2].value", equalTo("greeting(hi)")).
-                body("conversationSteps[1].data[3].key", equalTo("behavior_rules:success")).
-                body("conversationSteps[1].data[3].value[0]", equalTo("Greeting")).
-                body("conversationSteps[1].data[4].key", equalTo("actions")).
-                body("conversationSteps[1].data[4].value[0]", equalTo("greet2")).
-                body("conversationSteps[1].data[5].key", equalTo("output:text:greet2")).
-                body("conversationSteps[1].data[5].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
+                body("conversationSteps[1].conversationStep[0].value", equalTo("hi")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("input:formatted")).
+                body("conversationSteps[1].conversationStep[1].value", equalTo("hi")).
+                body("conversationSteps[1].conversationStep[2].key", equalTo("expressions:parsed")).
+                body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(hi)")).
+                body("conversationSteps[1].conversationStep[3].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].conversationStep[3].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].conversationStep[4].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[4].value[0]", equalTo("greet2")).
+                body("conversationSteps[1].conversationStep[5].key", equalTo("output:text:greet2")).
+                body("conversationSteps[1].conversationStep[5].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -283,24 +300,22 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 InputData.Context.ContextType.string, "someContextValue");
         contextMap.put("someContextKeyString", context);
         InputData inputData = new InputData("hello", contextMap);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
-
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[1].key", equalTo("context:someContextKeyString")).
-                body("conversationSteps[1].data[1].value.type", equalTo("string")).
-                body("conversationSteps[1].data[1].value.value", equalTo("someContextValue")).
-                body("conversationSteps[1].data[4].key", equalTo("behavior_rules:success")).
-                body("conversationSteps[1].data[4].value[0]", equalTo("Greeting")).
-                body("conversationSteps[1].data[4].value[1]", equalTo("ContextReaction1")).
-                body("conversationSteps[1].data[5].key", equalTo("actions")).
-                body("conversationSteps[1].data[5].value[0]", equalTo("greet")).
-                body("conversationSteps[1].data[5].value[1]", equalTo("acknowledged_context1")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("context:someContextKeyString")).
+                body("conversationSteps[1].conversationStep[1].value.type", equalTo("string")).
+                body("conversationSteps[1].conversationStep[1].value.value", equalTo("someContextValue")).
+                body("conversationSteps[1].conversationStep[4].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].conversationStep[4].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].conversationStep[4].value[1]", equalTo("ContextReaction1")).
+                body("conversationSteps[1].conversationStep[5].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[5].value[0]", equalTo("greet")).
+                body("conversationSteps[1].conversationStep[5].value[1]", equalTo("acknowledged_context1")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -313,24 +328,22 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 InputData.Context.ContextType.expressions, "expression(someValue), expression2(someOtherValue)");
         contextMap.put("someContextKeyExpressions", context);
         InputData inputData = new InputData("hello", contextMap);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
-
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[1].key", equalTo("context:someContextKeyExpressions")).
-                body("conversationSteps[1].data[1].value.type", equalTo("expressions")).
-                body("conversationSteps[1].data[1].value.value", equalTo("expression(someValue), expression2(someOtherValue)")).
-                body("conversationSteps[1].data[4].key", equalTo("behavior_rules:success")).
-                body("conversationSteps[1].data[4].value[0]", equalTo("Greeting")).
-                body("conversationSteps[1].data[4].value[1]", equalTo("ContextReaction2")).
-                body("conversationSteps[1].data[5].key", equalTo("actions")).
-                body("conversationSteps[1].data[5].value[0]", equalTo("greet")).
-                body("conversationSteps[1].data[5].value[1]", equalTo("acknowledged_context2")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("context:someContextKeyExpressions")).
+                body("conversationSteps[1].conversationStep[1].value.type", equalTo("expressions")).
+                body("conversationSteps[1].conversationStep[1].value.value", equalTo("expression(someValue), expression2(someOtherValue)")).
+                body("conversationSteps[1].conversationStep[4].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].conversationStep[4].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].conversationStep[4].value[1]", equalTo("ContextReaction2")).
+                body("conversationSteps[1].conversationStep[5].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[5].value[0]", equalTo("greet")).
+                body("conversationSteps[1].conversationStep[5].value[1]", equalTo("acknowledged_context2")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -344,23 +357,21 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 InputData.Context.ContextType.object, valueObject);
         contextMap.put("someContextKeyObject", context);
         InputData inputData = new InputData("hello", contextMap);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
-
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[1].key", equalTo("context:someContextKeyObject")).
-                body("conversationSteps[1].data[1].value.type", equalTo("object")).
-                body("conversationSteps[1].data[4].key", equalTo("behavior_rules:success")).
-                body("conversationSteps[1].data[4].value[0]", equalTo("Greeting")).
-                body("conversationSteps[1].data[4].value[1]", equalTo("ContextReaction3")).
-                body("conversationSteps[1].data[5].key", equalTo("actions")).
-                body("conversationSteps[1].data[5].value[0]", equalTo("greet")).
-                body("conversationSteps[1].data[5].value[1]", equalTo("acknowledged_context3")).
+                body("conversationSteps[1].conversationStep[1].key", equalTo("context:someContextKeyObject")).
+                body("conversationSteps[1].conversationStep[1].value.type", equalTo("object")).
+                body("conversationSteps[1].conversationStep[4].key", equalTo("behavior_rules:success")).
+                body("conversationSteps[1].conversationStep[4].value[0]", equalTo("Greeting")).
+                body("conversationSteps[1].conversationStep[4].value[1]", equalTo("ContextReaction3")).
+                body("conversationSteps[1].conversationStep[5].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[5].value[0]", equalTo("greet")).
+                body("conversationSteps[1].conversationStep[5].value[1]", equalTo("acknowledged_context3")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -374,21 +385,19 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 InputData.Context.ContextType.object, valueObject);
         contextMap.put("userInfo", context);
         InputData inputData = new InputData("hello", contextMap);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
-
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].data[6].key", equalTo("output:text:greet_personally")).
-                body("conversationSteps[1].data[6].value", equalTo("Hello John! Nice to meet you! :-)")).
-                body("conversationSteps[1].data[7].key", equalTo("output:text:greet_personally:preTemplated")).
-                body("conversationSteps[1].data[7].value", equalTo("Hello [[${userInfo.username}]]! Nice to meet you! :-)")).
-                body("conversationSteps[1].data[8].key", equalTo("output:text:greet_personally:postTemplated")).
-                body("conversationSteps[1].data[8].value", equalTo("Hello John! Nice to meet you! :-)")).
+                body("conversationSteps[1].conversationStep[6].key", equalTo("output:text:greet_personally")).
+                body("conversationSteps[1].conversationStep[6].value", equalTo("Hello John! Nice to meet you! :-)")).
+                body("conversationSteps[1].conversationStep[7].key", equalTo("output:text:greet_personally:preTemplated")).
+                body("conversationSteps[1].conversationStep[7].value", equalTo("Hello [[${userInfo.username}]]! Nice to meet you! :-)")).
+                body("conversationSteps[1].conversationStep[8].key", equalTo("output:text:greet_personally:postTemplated")).
+                body("conversationSteps[1].conversationStep[8].value", equalTo("Hello John! Nice to meet you! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -402,49 +411,54 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 InputData.Context.ContextType.object, valueObject);
         contextMap.put("userInfo", context);
         InputData inputData = new InputData("bye", contextMap);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData);
-
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(3)).
-                body("conversationSteps[2].data[10].key", equalTo("quickReplies:say_goodbye:preTemplated")).
-                body("conversationSteps[2].data[10].value[0].value", equalTo("Bye, bye [[${userInfo.username}]]!!")).
-                body("conversationSteps[2].data[10].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
-                body("conversationSteps[2].data[11].key", equalTo("quickReplies:say_goodbye:postTemplated")).
-                body("conversationSteps[2].data[11].value[0].value", equalTo("Bye, bye John!!")).
-                body("conversationSteps[2].data[11].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
+                body("conversationSteps[2].conversationStep[10].key", equalTo("quickReplies:say_goodbye:preTemplated")).
+                body("conversationSteps[2].conversationStep[10].value[0].value", equalTo("Bye, bye [[${userInfo.username}]]!!")).
+                body("conversationSteps[2].conversationStep[10].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
+                body("conversationSteps[2].conversationStep[11].key", equalTo("quickReplies:say_goodbye:postTemplated")).
+                body("conversationSteps[2].conversationStep[11].value[0].value", equalTo("Bye, bye John!!")).
+                body("conversationSteps[2].conversationStep[11].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.ENDED.toString())).
                 body("redoCacheSize", equalTo(0));
     }
 
-    private void sendUserInput(ResourceId resourceId, ResourceId conversationResourceId, String userInput) {
-        given().
+    private Response sendUserInput(ResourceId resourceId,
+                                   ResourceId conversationResourceId,
+                                   String userInput,
+                                   boolean returnDetailed,
+                                   boolean returnCurrentStepOnly) {
+        return given().
                 contentType(ContentType.TEXT).
                 body(userInput).
-                post(String.format("bots/unrestricted/%s/%s", resourceId.getId(), conversationResourceId.getId()));
+                post(String.format("bots/unrestricted/%s/%s?returnDetailed=%s&returnCurrentStepOnly=%s",
+                        resourceId.getId(), conversationResourceId.getId(), returnDetailed, returnCurrentStepOnly));
     }
 
-    private void sendUserInputWithContext(ResourceId resourceId,
-                                          ResourceId conversationResourceId,
-                                          InputData inputData) throws IOException {
-        given().
-                contentType(ContentType.JSON).
-                body(jsonSerialization.toJson(inputData)).
-                post(String.format("bots/unrestricted/%s/%s",
-                        resourceId.getId(),
-                        conversationResourceId.getId()));
-    }
-
-    private Response getConversationLogResponse(ResourceId botResourceId, ResourceId conversationResourceId, boolean includeAll) {
+    private Response sendUserInputWithContext(ResourceId resourceId,
+                                              ResourceId conversationResourceId,
+                                              InputData inputData,
+                                              boolean returnDetailed) throws IOException {
         return given().
                 contentType(ContentType.JSON).
-                get(String.format("bots/unrestricted/%s/%s?includeAll=%s", botResourceId.getId(),
-                        conversationResourceId.getId(), includeAll));
+                body(jsonSerialization.toJson(inputData)).
+                post(String.format("bots/unrestricted/%s/%s?returnDetailed=%s&returnCurrentStepOnly=%s",
+                        resourceId.getId(),
+                        conversationResourceId.getId(),
+                        returnDetailed, false));
+    }
+
+    private Response getConversationLogResponse(ResourceId botResourceId, ResourceId conversationResourceId) {
+        return given().
+                contentType(ContentType.JSON).
+                get(String.format("bots/unrestricted/%s/%s?returnDetailed=%s", botResourceId.getId(),
+                        conversationResourceId.getId(), false));
     }
 }

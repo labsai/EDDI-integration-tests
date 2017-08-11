@@ -5,6 +5,7 @@
       "outputSet": [
         {
           "action": "welcome",
+          "timesOccurred": 0,
           "outputs": [
             {
               "type": "text",
@@ -12,8 +13,7 @@
                 "Welcome! I am E.D.D.I.--changed-again!"
               ]
             }
-          ],
-          "occurred": 0
+          ]
         }
       ]
     }

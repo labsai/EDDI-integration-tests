@@ -2,6 +2,7 @@
   "outputSet": [
     {
       "action": "welcome2",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -9,11 +10,11 @@
             "Welcome! I am E.D.D.I."
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "greet2",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -21,11 +22,11 @@
             "Hi there! Nice to meet up! :-)"
           ]
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "greet2",
+      "timesOccurred": 1,
       "outputs": [
         {
           "type": "text",
@@ -33,11 +34,11 @@
             "Did we already say hi ?! Well, twice is better than not at all! ;-)"
           ]
         }
-      ],
-      "occurred": 1
+      ]
     },
     {
       "action": "say_goodbye2",
+      "timesOccurred": 0,
       "outputs": [
         {
           "type": "text",
@@ -55,11 +56,11 @@
           "value": "See you!",
           "expressions": "goodbye(see_you), operation(quick_reply)"
         }
-      ],
-      "occurred": 0
+      ]
     },
     {
       "action": "say_goodbye2",
+      "timesOccurred": 1,
       "outputs": [
         {
           "type": "text",
@@ -67,8 +68,7 @@
             ":-)"
           ]
         }
-      ],
-      "occurred": 1
+      ]
     }
   ]
 }
