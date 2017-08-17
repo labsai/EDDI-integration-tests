@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 @Slf4j
 public class RestBotEngineTest extends BaseCRUDOperations {
     private static final String HEADER_LOCATION = "location";
-    private static final String DEPLOY_PATH = "administration/unrestricted/deploy/%s?version=%s";
+    private static final String DEPLOY_PATH = "administration/unrestricted/deploy/%s?version=%s&autoDeploy=false";
     private static final String DEPLOYMENT_STATUS_PATH = "administration/unrestricted/deploymentstatus/%s?version=%s";
     private final JsonSerialization jsonSerialization;
     private ResourceId botResourceId;
