@@ -10,6 +10,11 @@
       "word": "bye",
       "exp": "goodbye(bye)",
       "frequency": 0
+    },
+    {
+      "word": "question",
+      "exp": "two_options_question(question)",
+      "frequency": 0
     }
   ],
   "phrases": [

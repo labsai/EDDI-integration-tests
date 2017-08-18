@@ -106,7 +106,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
         //since asynchronous,getting the conversationLog could be to fast
         // if the machine on which eddi will be executed is too slow, thus wait a second to be sure it is done
         Thread.sleep(1000L);
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId);
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -249,7 +249,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkQuickReplyConversationLog() {
-        Response response = sendUserInput(botResourceId, conversationResourceId, "bye", false, false);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "question", false, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -257,12 +257,12 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
                 body("conversationSteps[1].conversationStep", hasSize(4)).
-                body("conversationSteps[1].conversationStep[3].key", equalTo("quickReplies:say_goodbye")).
-                body("conversationSteps[1].conversationStep[3].value[0].value", equalTo("Bye, bye!")).
-                body("conversationSteps[1].conversationStep[3].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
-                body("conversationSteps[1].conversationStep[3].value[1].value", equalTo("See you!")).
-                body("conversationSteps[1].conversationStep[3].value[1].expressions", equalTo("goodbye(see_you), operation(quick_reply)")).body("environment", equalTo("unrestricted")).
-                body("conversationState", equalTo("ENDED")).
+                body("conversationSteps[1].conversationStep[3].key", equalTo("quickReplies:giving_two_options")).
+                body("conversationSteps[1].conversationStep[3].value[0].value", equalTo("Option 1")).
+                body("conversationSteps[1].conversationStep[3].value[0].expressions", equalTo("quickReply(option1)")).
+                body("conversationSteps[1].conversationStep[3].value[1].value", equalTo("Option 2")).
+                body("conversationSteps[1].conversationStep[3].value[1].expressions", equalTo("quickReply(option2)")).body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo("READY")).
                 body("redoCacheSize", equalTo(0));
     }
 
@@ -427,22 +427,38 @@ public class RestBotEngineTest extends BaseCRUDOperations {
         contextMap.put("userInfo", context);
         InputData inputData = new InputData("bye", contextMap);
         sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
-        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
 
         response.then().assertThat().
                 statusCode(200).
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
-                body("conversationSteps", hasSize(3)).
-                body("conversationSteps[2].conversationStep[11].key", equalTo("quickReplies:say_goodbye:preTemplated")).
-                body("conversationSteps[2].conversationStep[11].value[0].value", equalTo("Bye, bye [[${userInfo.username}]]!!")).
-                body("conversationSteps[2].conversationStep[11].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
-                body("conversationSteps[2].conversationStep[12].key", equalTo("quickReplies:say_goodbye:postTemplated")).
-                body("conversationSteps[2].conversationStep[12].value[0].value", equalTo("Bye, bye John!!")).
-                body("conversationSteps[2].conversationStep[12].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].conversationStep[11].key", equalTo("quickReplies:say_goodbye:preTemplated")).
+                body("conversationSteps[1].conversationStep[11].value[0].value", equalTo("Bye, bye John!!")).
+                body("conversationSteps[1].conversationStep[11].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
+                body("conversationSteps[1].conversationStep[12].key", equalTo("quickReplies:say_goodbye:postTemplated")).
+                body("conversationSteps[1].conversationStep[12].value[0].value", equalTo("Bye, bye John!!")).
+                body("conversationSteps[1].conversationStep[12].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.ENDED.toString())).
                 body("redoCacheSize", equalTo(0));
+    }
+
+    @Test
+    public void testConversationEnded() throws IOException {
+        Map<String, InputData.Context> contextMap = new HashMap<>();
+        Object valueObject = jsonSerialization.toObject("{\"username\":\"John\"}", Object.class);
+        InputData.Context context = new InputData.Context(
+                InputData.Context.ContextType.object, valueObject);
+        contextMap.put("userInfo", context);
+        InputData inputData = new InputData("bye", contextMap);
+        sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+
+        response.then().assertThat().
+                statusCode(410).
+                body(equalTo("Conversation has ended!"));
     }
 
     private Response sendUserInput(ResourceId resourceId,
@@ -470,10 +486,10 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                         returnDetailed, false));
     }
 
-    private Response getConversationLogResponse(ResourceId botResourceId, ResourceId conversationResourceId) {
+    private Response getConversationLogResponse(ResourceId botResourceId, ResourceId conversationResourceId, boolean returnDetailed) {
         return given().
                 contentType(ContentType.JSON).
                 get(String.format("bots/unrestricted/%s/%s?returnDetailed=%s", botResourceId.getId(),
-                        conversationResourceId.getId(), false));
+                        conversationResourceId.getId(), returnDetailed));
     }
 }

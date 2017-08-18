@@ -76,6 +76,22 @@
               "children": []
             }
           ]
+        },
+        {
+          "name": "Multiple_Choice",
+          "actions": [
+            "giving_two_options"
+          ],
+          "children": [
+            {
+              "type": "inputmatcher",
+              "values": {
+                "expressions": "two_options_question(*)",
+                "occurrence": "current"
+              },
+              "children": []
+            }
+          ]
         }
       ]
     },
