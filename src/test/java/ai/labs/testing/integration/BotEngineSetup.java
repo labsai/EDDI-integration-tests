@@ -63,7 +63,7 @@ class BotEngineSetup extends BaseCRUDOperations {
 
     private PackageConfiguration.PackageExtension createNormalizerExtension() {
         PackageConfiguration.PackageExtension packageExtension = createExtension("eddi://ai.labs.normalizer");
-        packageExtension.getConfig().put("allowedChars", "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        packageExtension.getConfig().put("allowedChars", "0123456789abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         packageExtension.getConfig().put("convertUmlaute", "true");
         return packageExtension;
     }

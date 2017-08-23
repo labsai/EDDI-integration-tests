@@ -124,7 +124,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
 
     @Test
     public void checkNormalizer() {
-        Response response = sendUserInput(botResourceId, conversationResourceId, "hello123", true, false);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "hello!!!", true, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -132,7 +132,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
                 body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
-                body("conversationSteps[1].conversationStep[0].value", equalTo("hello123")).
+                body("conversationSteps[1].conversationStep[0].value", equalTo("hello!!!")).
                 body("conversationSteps[1].conversationStep[1].key", equalTo("input:formatted")).
                 body("conversationSteps[1].conversationStep[1].value", equalTo("hello")).
                 body("environment", equalTo("unrestricted")).
@@ -261,16 +261,16 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[3].value[0].value", equalTo("Option 1")).
                 body("conversationSteps[1].conversationStep[3].value[0].expressions", equalTo("quickReply(option1)")).
                 body("conversationSteps[1].conversationStep[3].value[1].value", equalTo("Option 2")).
-                body("conversationSteps[1].conversationStep[3].value[1].expressions", equalTo("quickReply(option2)")).body("environment", equalTo("unrestricted")).
+                body("conversationSteps[1].conversationStep[3].value[1].expressions", equalTo("quickReply(option2)")).
+                body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo("READY")).
                 body("redoCacheSize", equalTo(0));
     }
 
-/*  TODO doesn't work yet, parser doesn't recognize quickReplies containing punctuations if normalizer is activated
     @Test
     public void checkQuickReplyRecognizedByParserConversationLog() {
-        sendUserInput(botResourceId, conversationResourceId, "bye", false, false);
-        Response response = sendUserInput(botResourceId, conversationResourceId, "Bye, bye!", true, false);
+        sendUserInput(botResourceId, conversationResourceId, "question", false, false);
+        Response response = sendUserInput(botResourceId, conversationResourceId, "Option 1", true, false);
 
         response.then().assertThat().
                 statusCode(200).
@@ -278,8 +278,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(3)).
                 body("conversationSteps[2].conversationStep[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[2].conversationStep[2].value", equalTo("goodbye(bye_bye), operation(quick_reply)"));
-    }*/
+                body("conversationSteps[2].conversationStep[2].value", equalTo("quickReply(option1)"));
+    }
 
     @Test
     public void checkWordInputComplexConversationLogWithSecondBotDeployed() {
