@@ -35,7 +35,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "greeting(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
@@ -52,7 +52,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "goodbye(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
@@ -68,7 +68,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "thank(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
@@ -84,7 +84,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "how_are_you",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }

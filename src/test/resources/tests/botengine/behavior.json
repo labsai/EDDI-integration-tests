@@ -29,7 +29,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "greeting(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             },
@@ -54,7 +54,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "greeting(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
@@ -71,7 +71,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "goodbye(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
@@ -87,7 +87,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "two_options_question(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
