@@ -10,18 +10,12 @@
           ],
           "children": [
             {
-              "type": "negation",
-              "values": {},
-              "children": [
-                {
-                  "type": "occurrence",
-                  "values": {
-                    "maxOccurrence": "ever",
-                    "behaviorRuleName": "Welcome"
-                  },
-                  "children": []
-                }
-              ]
+              "type": "occurrence",
+              "values": {
+                "maxTimesOccurred": "0",
+                "behaviorRuleName": "Welcome"
+              },
+              "children": []
             }
           ]
         },
@@ -35,7 +29,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "greeting(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
@@ -52,7 +46,7 @@
               "type": "inputmatcher",
               "values": {
                 "expressions": "goodbye(*)",
-                "occurrence": "current"
+                "occurrence": "currentStep"
               },
               "children": []
             }
