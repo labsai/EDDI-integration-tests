@@ -393,6 +393,29 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @Test
+    public void testQuickReplyAsContext() throws IOException {
+        Map<String, InputData.Context> contextMap = new HashMap<>();
+        Object valueObject = jsonSerialization.toObject("[{\"value\":\"qr1\",\"expressions\":\"exp(qr1)\"}," +
+                "{\"value\":\"qr2\",\"expressions\":\"exp(qr2)\"}]", Object.class);
+        InputData.Context context = new InputData.Context(
+                InputData.Context.ContextType.object, valueObject);
+        contextMap.put("quickReplies", context);
+        InputData inputData = new InputData("", contextMap);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].conversationStep[2].key", equalTo("quickReplies:context")).
+                body("conversationSteps[1].conversationStep[2].value[0].value", equalTo("qr1")).
+                body("conversationSteps[1].conversationStep[2].value[0].expressions", equalTo("exp(qr1)")).
+                body("conversationSteps[1].conversationStep[2].value[1].value", equalTo("qr2")).
+                body("conversationSteps[1].conversationStep[2].value[1].expressions", equalTo("exp(qr2)"));
+    }
+
+    @Test
     public void testTemplatingOfOutput() throws IOException {
         Map<String, InputData.Context> contextMap = new HashMap<>();
         Object valueObject = jsonSerialization.toObject("{\"username\":\"John\"}", Object.class);
