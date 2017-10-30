@@ -15,7 +15,13 @@
       "word": "question",
       "exp": "two_options_question(question)",
       "frequency": 0
+    },
+    {
+      "word": "property",
+      "exp": "property(someMeaning(someValue))",
+      "frequency": 0
     }
+
   ],
   "phrases": [
     {
