@@ -469,6 +469,24 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @Test
+    public void testPropertyExtraction() throws IOException {
+        InputData inputData = new InputData("property", new HashMap<>());
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].conversationStep[4].key", equalTo("properties:extracted")).
+                body("conversationSteps[1].conversationStep[4].value[0].meanings[0]", equalTo("someMeaning")).
+                body("conversationSteps[1].conversationStep[4].value[0].value", equalTo("someValue")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
+    @Test
     public void testConversationEnded() throws IOException {
         Map<String, InputData.Context> contextMap = new HashMap<>();
         Object valueObject = jsonSerialization.toObject("{\"username\":\"John\"}", Object.class);
