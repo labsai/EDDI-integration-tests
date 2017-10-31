@@ -149,7 +149,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].conversationStep", hasSize(3)).
                 body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
                 body("conversationSteps[1].conversationStep[0].value", equalTo("hello")).
                 body("conversationSteps[1].conversationStep[1].key", equalTo("actions")).
@@ -170,7 +169,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(1)).
-                body("conversationSteps[0].conversationStep", hasSize(3)).
                 body("conversationSteps[0].conversationStep[0].key", equalTo("input:initial")).
                 body("conversationSteps[0].conversationStep[0].value", equalTo("hello")).
                 body("conversationSteps[0].conversationStep[1].key", equalTo("actions")).
@@ -192,7 +190,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(3)).
-                body("conversationSteps[2].conversationStep", hasSize(3)).
                 body("conversationSteps[2].conversationStep[2].key", equalTo("output:text:greet")).
                 body("conversationSteps[2].conversationStep[2].value", equalTo("Did we already say hi ?! Well, twice is better than not at all! ;-)")).
                 body("environment", equalTo("unrestricted")).
@@ -235,7 +232,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].conversationStep", hasSize(9)).
                 body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
                 body("conversationSteps[1].conversationStep[0].value", equalTo("good afternoon")).
                 body("conversationSteps[1].conversationStep[1].key", equalTo("input:formatted")).
@@ -256,7 +252,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].conversationStep", hasSize(4)).
                 body("conversationSteps[1].conversationStep[3].key", equalTo("quickReplies:giving_two_options")).
                 body("conversationSteps[1].conversationStep[3].value[0].value", equalTo("Option 1")).
                 body("conversationSteps[1].conversationStep[3].value[0].expressions", equalTo("quickReply(option1)")).
