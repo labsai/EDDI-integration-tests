@@ -444,8 +444,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 InputData.Context.ContextType.object, valueObject);
         contextMap.put("userInfo", context);
         InputData inputData = new InputData("bye", contextMap);
-        sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
-        Response response = getConversationLogResponse(botResourceId, conversationResourceId, true);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
                 statusCode(200).
