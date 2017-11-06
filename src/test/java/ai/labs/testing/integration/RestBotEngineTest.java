@@ -481,7 +481,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @Test
-    public void testConversationEnded() throws IOException {
+    public void testConversationEnded() throws Exception {
         Map<String, InputData.Context> contextMap = new HashMap<>();
         Object valueObject = jsonSerialization.toObject("{\"username\":\"John\"}", Object.class);
         InputData.Context context = new InputData.Context(
@@ -489,6 +489,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
         contextMap.put("userInfo", context);
         InputData inputData = new InputData("bye", contextMap);
         sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+        Thread.sleep(100L);
         Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
 
         response.then().assertThat().
