@@ -506,7 +506,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @Test
-    public void testConversationEnded() throws IOException {
+    public void testConversationEnded() throws Exception {
         Map<String, InputData.Context> contextMap = new HashMap<>();
         Object valueObject = jsonSerialization.toObject("{\"username\":\"John\"}", Object.class);
         InputData.Context context = new InputData.Context(
