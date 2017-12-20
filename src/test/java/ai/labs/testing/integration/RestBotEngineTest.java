@@ -481,7 +481,32 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @Test
-    public void testConversationEnded() throws Exception {
+    public void testPropertyExtractionWithPropertyInContext() throws IOException {
+        Map<String, InputData.Context> contextMap = new HashMap<>();
+        InputData.Context context = new InputData.Context(
+                InputData.Context.ContextType.expressions, "property(someCategory(someValue))");
+        contextMap.put("properties", context);
+        InputData inputData = new InputData("", contextMap);
+        Response response = sendUserInputWithContext(botResourceId, conversationResourceId, inputData, true);
+
+        response.then().assertThat().
+                statusCode(200).
+                body("botId", equalTo(botResourceId.getId())).
+                body("botVersion", equalTo(botResourceId.getVersion())).
+                body("conversationSteps", hasSize(2)).
+                body("conversationSteps[1].conversationStep[0].key", equalTo("context:properties")).
+                body("conversationSteps[1].conversationStep[0].value.type", equalTo("expressions")).
+                body("conversationSteps[1].conversationStep[0].value.value", equalTo("property(someCategory(someValue))")).
+                body("conversationSteps[1].conversationStep[2].key", equalTo("properties:extracted")).
+                body("conversationSteps[1].conversationStep[2].value[0].meanings[0]", equalTo("someCategory")).
+                body("conversationSteps[1].conversationStep[2].value[0].value", equalTo("someValue")).
+                body("environment", equalTo("unrestricted")).
+                body("conversationState", equalTo(Status.READY.toString())).
+                body("redoCacheSize", equalTo(0));
+    }
+
+    @Test
+    public void testConversationEnded() throws IOException {
         Map<String, InputData.Context> contextMap = new HashMap<>();
         Object valueObject = jsonSerialization.toObject("{\"username\":\"John\"}", Object.class);
         InputData.Context context = new InputData.Context(
