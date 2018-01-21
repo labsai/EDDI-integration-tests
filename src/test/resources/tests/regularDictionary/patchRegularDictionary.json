@@ -2,7 +2,6 @@
   {
     "operation": "SET",
     "document": {
-      "language": "fr",
       "words": [
         {
           "word": "testword2",
