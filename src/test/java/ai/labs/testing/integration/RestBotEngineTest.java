@@ -501,8 +501,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[0].value.type", equalTo("expressions")).
                 body("conversationSteps[1].conversationStep[0].value.value", equalTo("property(someCategory(someValue))")).
                 body("conversationSteps[1].conversationStep[2].key", equalTo("properties:extracted")).
-                body("conversationSteps[1].conversationStep[2].value[0].meanings[0]", equalTo("someCategory")).
-                body("conversationSteps[1].conversationStep[2].value[0].value", equalTo("someValue")).
+                body("conversationSteps[1].conversationStep[2].value[0].someCategory", equalTo("someValue")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
