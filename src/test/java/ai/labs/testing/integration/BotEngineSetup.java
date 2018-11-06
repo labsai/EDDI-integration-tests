@@ -21,7 +21,7 @@ class BotEngineSetup extends BaseCRUDOperations {
     }
 
 
-    URI setupBot(String regularDictionaryPath, String behaviorPath, String outputPath) throws IOException {
+    URI setupBot(String regularDictionaryPath, String behaviorPath, String outputPath) throws IOException, InterruptedException {
         super.setup();
 
         // load test resources

@@ -22,11 +22,14 @@ import static org.hamcrest.Matchers.*;
  * @author ginccc
  */
 class BaseCRUDOperations {
+    private static final String HEADER_LOCATION = "location";
+    private static final String DEPLOY_PATH = "administration/unrestricted/deploy/%s?version=%s&autoDeploy=false";
+    private static final String DEPLOYMENT_STATUS_PATH = "administration/unrestricted/deploymentstatus/%s?version=%s";
     private static final ClassLoader classLoader = ClassLoader.getSystemClassLoader();
     static final String VERSION_STRING = "?version=";
     ResourceId resourceId;
 
-    private static File getFile(String filePath) throws FileNotFoundException {
+    static File getFile(String filePath) throws FileNotFoundException {
         File file;
         URL resource = classLoader.getResource(filePath);
         if (resource != null) {
@@ -45,7 +48,7 @@ class BaseCRUDOperations {
         return toString(getFile("tests/" + filename));
     }
 
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         final Properties props = System.getProperties();
 
         RestAssured.baseURI = props.containsKey("eddi.baseURI") ? props.getProperty("eddi.baseURI") : "http://localhost";
@@ -88,7 +91,7 @@ class BaseCRUDOperations {
                 statusCode(equalTo(200));
     }
 
-    Response update(String body, String path) {
+    private Response update(String body, String path) {
         return given().
                 body(body).
                 contentType(ContentType.JSON).
@@ -116,7 +119,7 @@ class BaseCRUDOperations {
                 statusCode(equalTo(200));
     }
 
-    Response patch(String body, String path) {
+    private Response patch(String body, String path) {
         return given().
                 body(body).
                 contentType(ContentType.JSON).
@@ -144,7 +147,7 @@ class BaseCRUDOperations {
                 statusCode(equalTo(200));
     }
 
-    ValidatableResponse delete(String requestUri) {
+    private ValidatableResponse delete(String requestUri) {
         return given().delete(requestUri).then().statusCode(200);
     }
 
@@ -153,5 +156,40 @@ class BaseCRUDOperations {
         String requestUri = path + resourceId.getId() + VERSION_STRING + resourceId.getVersion();
         delete(requestUri);
         read(requestUri).then().statusCode(404);
+    }
+
+    void deployBot(String id, Integer version) throws InterruptedException {
+        given().post(String.format(DEPLOY_PATH, id, version));
+
+        while (true) {
+            Response response = given().accept(ContentType.TEXT).
+                    get(String.format(DEPLOYMENT_STATUS_PATH, id, version));
+            RestBotEngineTest.Status status = RestBotEngineTest.Status.valueOf(response.getBody().print());
+            if (status.equals(RestBotEngineTest.Status.IN_PROGRESS)) {
+                Thread.sleep(500);
+            } else if (status.equals(RestBotEngineTest.Status.ERROR)) {
+                throw new RuntimeException(String.format("Couldn't deploy Bot (id=%s,version=%s)", id, version));
+            } else if (status.equals(RestBotEngineTest.Status.READY)) {
+                break;
+            }
+        }
+    }
+
+    Response sendUserInput(ResourceId resourceId,
+                           ResourceId conversationResourceId,
+                           String userInput,
+                           boolean returnDetailed,
+                           boolean returnCurrentStepOnly) {
+        return given().
+                contentType(ContentType.TEXT).
+                body(userInput).
+                post(String.format("bots/unrestricted/%s/%s?returnDetailed=%s&returnCurrentStepOnly=%s",
+                        resourceId.getId(), conversationResourceId.getId(), returnDetailed, returnCurrentStepOnly));
+    }
+
+    ResourceId createConversation(String id) {
+        Response response = given().post("bots/unrestricted/" + id);
+        String locationConversation = response.getHeader(HEADER_LOCATION);
+        return UriUtilities.extractResourceId(URI.create(locationConversation));
     }
 }

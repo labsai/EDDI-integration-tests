@@ -27,7 +27,7 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
     private Integer regualarDictionaryVersion;
 
     @BeforeTest
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         super.setup();
 
         // load test resources

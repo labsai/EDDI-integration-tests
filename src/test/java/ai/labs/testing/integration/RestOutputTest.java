@@ -20,7 +20,7 @@ public class RestOutputTest extends BaseCRUDOperations {
     private String PATCH_JSON;
 
     @BeforeTest
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         super.setup();
 
         // load test resources

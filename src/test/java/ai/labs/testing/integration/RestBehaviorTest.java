@@ -18,7 +18,7 @@ public class RestBehaviorTest extends BaseCRUDOperations {
     private String TEST_JSON2;
 
     @BeforeTest
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         super.setup();
 
         // load test resources

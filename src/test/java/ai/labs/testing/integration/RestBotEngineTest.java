@@ -24,9 +24,6 @@ import static org.hamcrest.Matchers.hasSize;
  */
 @Slf4j
 public class RestBotEngineTest extends BaseCRUDOperations {
-    private static final String HEADER_LOCATION = "location";
-    private static final String DEPLOY_PATH = "administration/unrestricted/deploy/%s?version=%s&autoDeploy=false";
-    private static final String DEPLOYMENT_STATUS_PATH = "administration/unrestricted/deploymentstatus/%s?version=%s";
     private final JsonSerialization jsonSerialization;
     private ResourceId botResourceId;
     private ResourceId bot2ResourceId;
@@ -45,7 +42,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     }
 
     @BeforeTest
-    public void setup() throws IOException {
+    public void setup() throws IOException, InterruptedException {
         super.setup();
         try {
             botResourceId = deployBot("botengine/regularDictionary.json",
@@ -76,29 +73,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     @BeforeMethod
     public void beforeMethod() {
         conversationResourceId = createConversation(botResourceId.getId());
-    }
-
-    private void deployBot(String id, Integer version) throws InterruptedException {
-        given().post(String.format(DEPLOY_PATH, id, version));
-
-        while (true) {
-            Response response = given().accept(ContentType.TEXT).
-                    get(String.format(DEPLOYMENT_STATUS_PATH, id, version));
-            Status status = Status.valueOf(response.getBody().print());
-            if (status.equals(Status.IN_PROGRESS)) {
-                Thread.sleep(500);
-            } else if (status.equals(Status.ERROR)) {
-                throw new RuntimeException(String.format("Couldn't deploy Bot (id=%s,version=%s)", id, version));
-            } else if (status.equals(Status.READY)) {
-                break;
-            }
-        }
-    }
-
-    private ResourceId createConversation(String id) {
-        Response response = given().post("bots/unrestricted/" + id);
-        String locationConversation = response.getHeader(HEADER_LOCATION);
-        return UriUtilities.extractResourceId(URI.create(locationConversation));
     }
 
     @Test
@@ -522,38 +496,6 @@ public class RestBotEngineTest extends BaseCRUDOperations {
         response.then().assertThat().
                 statusCode(410).
                 body(equalTo("Conversation has ended!"));
-    }
-
-    /*@Test
-    private void testBotTriggerMissing() {
-
-    }
-
-    @Test
-    private void testBotConversationWorking() {
-
-    }
-
-    @Test
-    private void testBotCreatingNewConversationIfEnded() {
-
-    }
-
-    @Test
-    private void testBotABChoosing() {
-
-    }
-*/
-    private Response sendUserInput(ResourceId resourceId,
-                                   ResourceId conversationResourceId,
-                                   String userInput,
-                                   boolean returnDetailed,
-                                   boolean returnCurrentStepOnly) {
-        return given().
-                contentType(ContentType.TEXT).
-                body(userInput).
-                post(String.format("bots/unrestricted/%s/%s?returnDetailed=%s&returnCurrentStepOnly=%s",
-                        resourceId.getId(), conversationResourceId.getId(), returnDetailed, returnCurrentStepOnly));
     }
 
     private Response sendUserInputWithContext(ResourceId resourceId,
