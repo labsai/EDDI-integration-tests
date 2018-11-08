@@ -71,12 +71,12 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 body(String.format(load("useCases/botdeployment.json"), resourceId.getId())).
                 put("/bottriggerstore/bottriggers/" + intent);
 
-        given().post("/botcrowd/" + intent + "/" + userId + "/endConversation");
+        given().post("/managedbots/" + intent + "/" + userId + "/endConversation");
 
         Response response = given().contentType("application/json").
                 body("{\"input\":\"weather\"}").
                 queryParam("returnCurrentStepOnly", "false").
-                post("/botcrowd/" + intent + "/" + userId);
+                post("/managedbots/" + intent + "/" + userId);
 
         response.then().assertThat().
                 body("botId", equalTo(resourceId.getId())).
