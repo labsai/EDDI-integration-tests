@@ -3,6 +3,7 @@ package ai.labs.testing.integration;
 import ai.labs.testing.ResourceId;
 import ai.labs.testing.UriUtilities;
 import io.restassured.response.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -42,23 +43,47 @@ public class RestUseCaseTest extends BaseCRUDOperations {
     @Test
     public void weatherBot() {
         ResourceId resourceId = bots.get(KEY_WEATHER_BOT);
-        ResourceId conversationId = createConversation(resourceId.getId());
+        String testUserId = "testUser" + RandomStringUtils.randomAlphanumeric(10);
+        ResourceId conversationId = createConversation(resourceId.getId(), testUserId);
         sendUserInput(resourceId, conversationId, "weather",
                 false, true);
 
         Response response = sendUserInput(resourceId, conversationId, "Vienna",
-                false, false);
+                true, false);
 
         response.then().assertThat().
                 body("botId", equalTo(resourceId.getId())).
                 body("botVersion", equalTo(resourceId.getVersion())).
-                body("conversationSteps[1].conversationStep[1].key", equalTo("actions")).
-                body("conversationSteps[1].conversationStep[1].value[0]", equalTo("ask_for_city")).
-                body("conversationSteps[2].conversationStep[1].key", equalTo("actions")).
-                body("conversationSteps[2].conversationStep[1].value[0]", equalTo("current_weather_in_city")).
-                body("conversationSteps[2].conversationStep[2].key", equalTo("output:text:current_weather_in_city")).
-                body("conversationSteps[2].conversationStep[2].value", containsString("Vienna")).
-                body("conversationSteps[2].conversationStep[2].value", not(containsString("[[")));
+                body("conversationOutputs[1].input", equalTo("weather")).
+                body("conversationOutputs[1].actions[0]", equalTo("ask_for_city")).
+                body("conversationOutputs[2].input", equalTo("Vienna")).
+                body("conversationOutputs[2].actions[0]", equalTo("current_weather_in_city")).
+                body("conversationSteps[1].conversationStep[5].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[5].value[0]", equalTo("ask_for_city")).
+                body("conversationSteps[2].conversationStep[6].key", equalTo("actions")).
+                body("conversationSteps[2].conversationStep[6].value[0]", equalTo("current_weather_in_city")).
+                body("conversationSteps[2].conversationStep[12].key", equalTo("output:text:current_weather_in_city")).
+                body("conversationSteps[2].conversationStep[12].value", containsString("Vienna")).
+                body("conversationSteps[2].conversationStep[12].value", not(containsString("[["))).
+                body("conversationProperties.count.value", equalTo(3)).
+                body("conversationProperties.chosenCity.value", equalTo("Vienna")).
+                body("conversationProperties.chosenCity.scope", equalTo("conversation")).
+                body("conversationProperties.currentWeatherDescription", nullValue());
+
+        response = sendUserInput(resourceId, conversationId, "weather",
+                false, true);
+
+        response.then().assertThat().
+                body("conversationProperties.count.value", equalTo(4));
+
+
+        //create new conversation, test longTerm memory
+        conversationId = createConversation(resourceId.getId(), testUserId);
+        response = sendUserInput(resourceId, conversationId, "weather",
+                false, true);
+
+        response.then().assertThat().
+                body("conversationProperties.count.value", equalTo(6));
     }
 
     @Test
@@ -81,7 +106,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
         response.then().assertThat().
                 body("botId", equalTo(resourceId.getId())).
                 body("botVersion", equalTo(resourceId.getVersion())).
-                body("conversationSteps[1].conversationStep[1].key", equalTo("actions")).
-                body("conversationSteps[1].conversationStep[1].value[0]", equalTo("ask_for_city"));
+                body("conversationSteps[1].conversationStep[2].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[2].value[0]", equalTo("ask_for_city"));
     }
 }

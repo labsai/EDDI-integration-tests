@@ -187,8 +187,8 @@ class BaseCRUDOperations {
                         resourceId.getId(), conversationResourceId.getId(), returnDetailed, returnCurrentStepOnly));
     }
 
-    ResourceId createConversation(String id) {
-        Response response = given().post("bots/unrestricted/" + id);
+    ResourceId createConversation(String botId, String userId) {
+        Response response = given().post("bots/unrestricted/" + botId + "?userId=" + userId);
         String locationConversation = response.getHeader(HEADER_LOCATION);
         return UriUtilities.extractResourceId(URI.create(locationConversation));
     }
