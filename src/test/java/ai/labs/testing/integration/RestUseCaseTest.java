@@ -106,7 +106,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
         response.then().assertThat().
                 body("botId", equalTo(resourceId.getId())).
                 body("botVersion", equalTo(resourceId.getVersion())).
-                body("conversationSteps[1].conversationStep[2].key", equalTo("actions")).
-                body("conversationSteps[1].conversationStep[2].value[0]", equalTo("ask_for_city"));
+                body("conversationSteps[1].conversationStep[1].key", equalTo("actions")).
+                body("conversationSteps[1].conversationStep[1].value[0]", equalTo("ask_for_city"));
     }
 }
