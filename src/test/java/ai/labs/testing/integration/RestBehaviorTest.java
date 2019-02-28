@@ -1,15 +1,15 @@
 package ai.labs.testing.integration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 import static org.hamcrest.Matchers.equalTo;
 
 /**
  * @author ginccc
  */
+@Slf4j
 public class RestBehaviorTest extends BaseCRUDOperations {
     private static final String ROOT_PATH = "/behaviorstore/behaviorsets/";
     private static final String RESOURCE_URI = "eddi://ai.labs.behavior" + ROOT_PATH;
@@ -18,12 +18,16 @@ public class RestBehaviorTest extends BaseCRUDOperations {
     private String TEST_JSON2;
 
     @BeforeTest
-    public void setup() throws IOException, InterruptedException {
-        super.setup();
+    public void setup() {
+        try {
+            super.setup();
 
-        // load test resources
-        TEST_JSON = load("behavior/createBehavior.json");
-        TEST_JSON2 = load("behavior/updateBehavior.json");
+            // load test resources
+            TEST_JSON = load("behavior/createBehavior.json");
+            TEST_JSON2 = load("behavior/updateBehavior.json");
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
     }
 
     @Test()
