@@ -39,7 +39,7 @@ public class RestBehaviorTest extends BaseCRUDOperations {
     public void readBehavior() {
         assertRead(ROOT_PATH).
                 body("behaviorGroups[0].name", equalTo("Smalltalk")).
-                body("behaviorGroups[0].behaviorRules[0].children[0].type", equalTo("negation"));
+                body("behaviorGroups[0].behaviorRules[0].conditions[0].type", equalTo("negation"));
     }
 
     @Test(dependsOnMethods = "readBehavior")
