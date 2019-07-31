@@ -45,7 +45,7 @@ public class RestOutputTest extends BaseCRUDOperations {
     @Test(dependsOnMethods = "readOutput")
     public void updateOutput() {
         assertUpdate(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
-                body("outputSet[5].outputs[0].valueAlternatives[0]", endsWith("--changed!"));
+                body("outputSet[0].outputs[0].valueAlternatives[0]", endsWith("--changed!"));
     }
 
     @Test(dependsOnMethods = "updateOutput")

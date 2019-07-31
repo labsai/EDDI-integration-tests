@@ -40,7 +40,6 @@ class BotEngineSetup extends BaseCRUDOperations {
 
         //createPackage
         PackageConfiguration packageConfig = new PackageConfiguration();
-        packageConfig.getPackageExtensions().add(createNormalizerExtension());
         packageConfig.getPackageExtensions().add(createParserExtension(locationDictionary));
         packageConfig.getPackageExtensions().add(createBehaviorExtension(locationBehavior));
         packageConfig.getPackageExtensions().add(createOutputExtension(locationOutput));
