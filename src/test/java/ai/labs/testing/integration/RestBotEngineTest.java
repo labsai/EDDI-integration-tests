@@ -427,8 +427,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
-                body("conversationSteps[1].conversationStep[5].key", equalTo("properties:extracted")).
-                body("conversationSteps[1].conversationStep[5].value[0].someMeaning", equalTo("someValue")).
+                body("conversationSteps[1].conversationStep[6].key", equalTo("properties:someMeaning")).
+                body("conversationSteps[1].conversationStep[6].value[0].value", equalTo("someValue")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
@@ -452,7 +452,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[0].value.type", equalTo("expressions")).
                 body("conversationSteps[1].conversationStep[0].value.value", equalTo("property(someCategory(someValue))")).
                 body("conversationSteps[1].conversationStep[2].key", equalTo("properties:extracted")).
-                body("conversationSteps[1].conversationStep[2].value[0].someCategory", equalTo("someValue")).
+                body("conversationSteps[1].conversationStep[2].value[0].value", equalTo("someValue")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("redoCacheSize", equalTo(0));
