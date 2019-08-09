@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-slim
+FROM maven:3.6.1-jdk-12
 
 ENV EDDI_BASEURI http://localhost
 ENV EDDI_PORT 7070
