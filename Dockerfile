@@ -1,4 +1,4 @@
-FROM maven:3.3-jdk-8-alpine
+FROM openjdk:11-jdk-slim
 
 ENV EDDI_BASEURI http://localhost
 ENV EDDI_PORT 7070
