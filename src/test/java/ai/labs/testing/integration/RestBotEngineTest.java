@@ -407,7 +407,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
                 body("conversationSteps[1].conversationStep[12].key", equalTo("quickReplies:say_goodbye:preTemplated")).
-                body("conversationSteps[1].conversationStep[12].value[0].value", equalTo("Bye, bye John!!")).
+                body("conversationSteps[1].conversationStep[12].value[0].value", equalTo("Bye, bye [[${userInfo.username}]]!!")).
                 body("conversationSteps[1].conversationStep[12].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
                 body("conversationSteps[1].conversationStep[13].key", equalTo("quickReplies:say_goodbye:postTemplated")).
                 body("conversationSteps[1].conversationStep[13].value[0].value", equalTo("Bye, bye John!!")).
