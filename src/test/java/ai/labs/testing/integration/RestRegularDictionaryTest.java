@@ -38,30 +38,30 @@ public class RestRegularDictionaryTest extends BaseCRUDOperations {
     public void readRegularDictionary() {
         assertRead(ROOT_PATH).
                 body("words.word", hasItem("testword")).
-                body("words.exp", hasItem("test_exp")).
+                body("words.expressions", hasItem("test_exp")).
                 body("words.frequency", hasItem(0)).
                 body("phrases.phrase", hasItem("Test Phrase")).
-                body("phrases.exp", hasItem("phrase_exp"));
+                body("phrases.expressions", hasItem("phrase_exp"));
     }
 
     @Test(dependsOnMethods = "readRegularDictionary")
     public void updateRegularDictionary() {
         assertUpdate(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
                 body("words.word", hasItem("testword2")).
-                body("words.exp", hasItem("test_exp2")).
+                body("words.expressions", hasItem("test_exp2")).
                 body("words.frequency", hasItem(1)).
                 body("phrases.phrase", hasItem("Test Phrase2")).
-                body("phrases.exp", hasItem("phrase_exp2"));
+                body("phrases.expressions", hasItem("phrase_exp2"));
     }
 
     @Test(dependsOnMethods = "updateRegularDictionary")
     public void patchRegularDictionary() {
         assertPatch(PATCH_JSON, ROOT_PATH, RESOURCE_URI).
                 body("words.word", hasItem("testword2")).
-                body("words.exp", hasItem("test_exp3")).
+                body("words.expressions", hasItem("test_exp3")).
                 body("words.frequency", hasItem(2)).
                 body("phrases.phrase", hasItem("Test Phrase2")).
-                body("phrases.exp", hasItem("phrase_exp3"));
+                body("phrases.expressions", hasItem("phrase_exp3"));
     }
 
 
