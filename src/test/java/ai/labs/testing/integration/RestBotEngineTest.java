@@ -94,7 +94,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[0].conversationStep[1].value", equalTo("Welcome! I am E.D.D.I.")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(false)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -114,7 +115,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[2].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -134,7 +136,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[0].conversationStep[2].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -151,7 +154,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[2].conversationStep[2].value", equalTo("Did we already say hi ?! Well, twice is better than not at all! ;-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -175,7 +179,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[7].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -195,7 +200,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(good_afternoon)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -214,7 +220,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[3].value[1].expressions", equalTo("quickReply(option2)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo("READY")).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -255,7 +262,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[7].value", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -283,7 +291,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[7].value[1]", equalTo("acknowledged_context1")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -311,7 +320,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[7].value[1]", equalTo("acknowledged_context2")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -339,7 +349,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[7].value[1]", equalTo("acknowledged_context3")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -388,7 +399,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[10].value", equalTo("Hello John! Nice to meet you! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -414,7 +426,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[13].value[0].expressions", equalTo("goodbye(bye_bye), operation(quick_reply)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.ENDED.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -431,7 +444,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[6].value[0].value", equalTo("someValue")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
@@ -455,7 +469,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[2].value[0].value", equalTo("someValue")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
-                body("redoCacheSize", equalTo(0));
+                body("undoAvailable", equalTo(true)).
+                body("redoAvailable", equalTo(false));
     }
 
     @Test
