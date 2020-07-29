@@ -4,6 +4,7 @@ import ai.labs.testing.ResourceId;
 import ai.labs.testing.UriUtilities;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -65,7 +66,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 body("conversationSteps[2].conversationStep[12].key", equalTo("output:text:current_weather_in_city")).
                 body("conversationSteps[2].conversationStep[12].value", containsString("Vienna")).
                 body("conversationSteps[2].conversationStep[12].value", not(containsString("[["))).
-                body("conversationProperties.count.value", equalTo(3)).
+                body("conversationProperties.count.value", equalTo(3.0f)).
                 body("conversationProperties.chosenCity.value", equalTo("Vienna")).
                 body("conversationProperties.chosenCity.scope", equalTo("conversation")).
                 body("conversationProperties.currentWeatherDescription", nullValue());
@@ -74,7 +75,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 false, true);
 
         response.then().assertThat().
-                body("conversationProperties.count.value", equalTo(4));
+                body("conversationProperties.count.value", equalTo(4.0f));
 
 
         //create new conversation, test longTerm memory
@@ -83,7 +84,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 false, true);
 
         response.then().assertThat().
-                body("conversationProperties.count.value", equalTo(6));
+                body("conversationProperties.count.value", equalTo(6.0f));
     }
 
     @Test
