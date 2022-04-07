@@ -8,18 +8,16 @@
           "actions": [
             "welcome"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "negation",
-              "values": {},
-              "children": [
+              "conditions": [
                 {
                   "type": "occurrence",
-                  "values": {
+                  "configs": {
                     "maxOccurrence": "ever",
                     "behaviorRuleName": "Welcome"
-                  },
-                  "children": []
+                  }
                 }
               ]
             }
@@ -30,14 +28,13 @@
           "actions": [
             "greet"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "greeting(*)",
                 "occurrence": "currentStep"
-              },
-              "children": []
+              }
             }
           ]
         },
@@ -47,14 +44,13 @@
             "say_goodbye",
             "CONVERSATION_END"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "goodbye(*)",
                 "occurrence": "currentStep"
-              },
-              "children": []
+              }
             }
           ]
         },
@@ -63,14 +59,13 @@
           "actions": [
             "thank"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "thank(*)",
                 "occurrence": "currentStep"
-              },
-              "children": []
+              }
             }
           ]
         },
@@ -79,14 +74,13 @@
           "actions": [
             "how_are_you"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "how_are_you",
                 "occurrence": "currentStep"
-              },
-              "children": []
+              }
             }
           ]
         }

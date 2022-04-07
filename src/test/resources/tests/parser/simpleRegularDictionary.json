@@ -3,14 +3,14 @@
   "words": [
     {
       "word": "hello",
-      "exp": "greeting(hello)",
+      "expressions": "greeting(hello)",
       "frequency": 0
     }
   ],
   "phrases": [
     {
       "phrase": "good afternoon",
-      "exp": "greeting(good_afternoon)"
+      "expressions": "greeting(good_afternoon)"
     }
   ]
 }

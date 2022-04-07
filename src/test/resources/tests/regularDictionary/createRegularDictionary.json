@@ -2,14 +2,14 @@
   "words": [
     {
       "word": "testword",
-      "exp": "test_exp",
+      "expressions": "test_exp",
       "frequency": 0
     }
   ],
   "phrases": [
     {
       "phrase": "Test Phrase",
-      "exp": "phrase_exp"
+      "expressions": "phrase_exp"
     }
   ]
 }

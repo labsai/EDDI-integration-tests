@@ -24,7 +24,7 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
     private String PARSER_CONFIG;
 
     private String regularDictionaryId;
-    private Integer regualarDictionaryVersion;
+    private Integer regularDictionaryVersion;
 
     @BeforeTest
     public void setup() throws IOException, InterruptedException {
@@ -40,7 +40,7 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
         assertCreate(REGULAR_DICTIONARY, REGULARDICTIONARY_PATH,
                 "eddi://ai.labs.regulardictionary" + REGULARDICTIONARY_PATH);
         regularDictionaryId = resourceId.getId();
-        regualarDictionaryVersion = resourceId.getVersion();
+        regularDictionaryVersion = resourceId.getVersion();
     }
 
     @Test(dependsOnMethods = "createRegularDictionary")
@@ -99,7 +99,7 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
     @AfterTest
     public void deleteConfigFiles() {
         //clean up regular dictionary
-        String requestUri = REGULARDICTIONARY_PATH + regularDictionaryId + VERSION_STRING + regualarDictionaryVersion;
+        String requestUri = REGULARDICTIONARY_PATH + regularDictionaryId + VERSION_STRING + regularDictionaryVersion;
         given().delete(requestUri).then().statusCode(200);
         given().get(requestUri).then().statusCode(404);
 
