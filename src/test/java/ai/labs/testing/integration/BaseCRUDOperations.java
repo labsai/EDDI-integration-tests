@@ -147,14 +147,11 @@ class BaseCRUDOperations {
                 statusCode(equalTo(200));
     }
 
-    private ValidatableResponse delete(String requestUri) {
-        return given().delete(requestUri).then().statusCode(200);
-    }
 
     void assertDelete(String path) {
         //test
         String requestUri = path + resourceId.getId() + VERSION_STRING + resourceId.getVersion();
-        delete(requestUri);
+        given().delete(requestUri);
         read(requestUri).then().statusCode(404);
     }
 
