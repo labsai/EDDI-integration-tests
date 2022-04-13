@@ -3,22 +3,22 @@
   "words": [
     {
       "word": "hello",
-      "exp": "greeting(hello)",
+      "expressions": "greeting(hello)",
       "frequency": 0
     },
     {
       "word": "bye",
-      "exp": "goodbye(bye)",
+      "expressions": "goodbye(bye)",
       "frequency": 0
     },
     {
       "word": "question",
-      "exp": "two_options_question(question)",
+      "expressions": "two_options_question(question)",
       "frequency": 0
     },
     {
       "word": "property",
-      "exp": "property(someMeaning(someValue))",
+      "expressions": "property(someMeaning(someValue))",
       "frequency": 0
     }
 
@@ -26,11 +26,11 @@
   "phrases": [
     {
       "phrase": "good afternoon",
-      "exp": "greeting(good_afternoon)"
+      "expressions": "greeting(good_afternoon)"
     },
     {
       "phrase": "see you",
-      "exp": "goodbye(see_you)"
+      "expressions": "goodbye(see_you)"
     }
   ]
 }

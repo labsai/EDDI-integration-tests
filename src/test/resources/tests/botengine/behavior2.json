@@ -8,14 +8,14 @@
           "actions": [
             "welcome2"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "occurrence",
-              "values": {
+              "configs": {
                 "maxTimesOccurred": "0",
                 "behaviorRuleName": "Welcome"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -24,14 +24,14 @@
           "actions": [
             "greet2"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "greeting(*)",
                 "occurrence": "currentStep"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -41,14 +41,14 @@
             "say_goodbye2",
             "CONVERSATION_END"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "goodbye(*)",
                 "occurrence": "currentStep"
               },
-              "children": []
+              "conditions": []
             }
           ]
         }

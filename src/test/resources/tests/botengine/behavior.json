@@ -8,14 +8,14 @@
           "actions": [
             "welcome"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "occurrence",
-              "values": {
+              "configs": {
                 "maxTimesOccurred": "0",
                 "behaviorRuleName": "Welcome"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -24,23 +24,23 @@
           "actions": [
             "greet_personally"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "greeting(*)",
                 "occurrence": "currentStep"
               },
-              "children": []
+              "conditions": []
             },
             {
               "type": "contextmatcher",
-              "values": {
+              "configs": {
                 "contextKey": "userInfo",
                 "contextType": "object",
                 "objectKeyPath": "username"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -49,14 +49,14 @@
           "actions": [
             "greet"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "greeting(*)",
                 "occurrence": "currentStep"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -66,14 +66,14 @@
             "say_goodbye",
             "CONVERSATION_END"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "goodbye(*)",
                 "occurrence": "currentStep"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -82,14 +82,14 @@
           "actions": [
             "giving_two_options"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "inputmatcher",
-              "values": {
+              "configs": {
                 "expressions": "two_options_question(*)",
                 "occurrence": "currentStep"
               },
-              "children": []
+              "conditions": []
             }
           ]
         }
@@ -103,15 +103,15 @@
           "actions": [
             "acknowledged_context1"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "contextmatcher",
-              "values": {
+              "configs": {
                 "contextKey": "someContextKeyString",
                 "contextType": "string",
                 "string": "someContextValue"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -120,15 +120,15 @@
           "actions": [
             "acknowledged_context2"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "contextmatcher",
-              "values": {
+              "configs": {
                 "contextKey": "someContextKeyExpressions",
                 "contextType": "expressions",
                 "expressions": "expression(someValue), expression2(someOtherValue)"
               },
-              "children": []
+              "conditions": []
             }
           ]
         },
@@ -137,16 +137,16 @@
           "actions": [
             "acknowledged_context3"
           ],
-          "children": [
+          "conditions": [
             {
               "type": "contextmatcher",
-              "values": {
+              "configs": {
                 "contextKey": "someContextKeyObject",
                 "contextType": "object",
                 "objectKeyPath": "key",
                 "objectValue": "value"
               },
-              "children": []
+              "conditions": []
             }
           ]
         }

@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.*;
 
 public class RestUseCaseTest extends BaseCRUDOperations {
     private static final String KEY_WEATHER_BOT = "weather-bot";
-    private Map<String, ResourceId> bots = new HashMap<>();
+    private final Map<String, ResourceId> bots = new HashMap<>();
 
     @BeforeTest
     public void setup() throws IOException, InterruptedException {
