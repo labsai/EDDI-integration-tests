@@ -7,7 +7,10 @@
         {
           "type": "text",
           "valueAlternatives": [
-            "Welcome! I am E.D.D.I."
+            {
+              "type": "text",
+              "text": "Welcome! I am E.D.D.I."
+            }
           ]
         }
       ]
@@ -19,7 +22,10 @@
         {
           "type": "text",
           "valueAlternatives": [
-            "Hi there! Nice to meet up! :-)"
+            {
+              "type": "text",
+              "text": "Hi there! Nice to meet up! :-)"
+            }
           ]
         }
       ]
@@ -31,7 +37,10 @@
         {
           "type": "text",
           "valueAlternatives": [
-            "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+            {
+              "type": "text",
+              "text": "Did we already say hi ?! Well, twice is better than not at all! ;-)"
+            }
           ]
         }
       ]
@@ -43,7 +52,10 @@
         {
           "type": "text",
           "valueAlternatives": [
-            "See you soon!"
+            {
+              "type": "text",
+              "text": "See you soon!"
+            }
           ]
         }
       ],
@@ -65,7 +77,10 @@
         {
           "type": "text",
           "valueAlternatives": [
-            ":-)"
+            {
+              "type": "text",
+              "text": ":-)"
+            }
           ]
         }
       ]

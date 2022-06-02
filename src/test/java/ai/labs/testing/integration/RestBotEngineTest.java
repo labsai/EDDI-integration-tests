@@ -92,7 +92,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[0].conversationStep[0].key", equalTo("actions")).
                 body("conversationSteps[0].conversationStep[0].value[1]", equalTo("welcome")).
                 body("conversationSteps[0].conversationStep[1].key", equalTo("output:text:welcome")).
-                body("conversationSteps[0].conversationStep[1].value", equalTo("Welcome! I am E.D.D.I.")).
+                body("conversationSteps[0].conversationStep[1].value.text", equalTo("Welcome! I am E.D.D.I.")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(false)).
@@ -113,7 +113,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[1].key", equalTo("actions")).
                 body("conversationSteps[1].conversationStep[1].value[0]", equalTo("greet")).
                 body("conversationSteps[1].conversationStep[2].key", equalTo("output:text:greet")).
-                body("conversationSteps[1].conversationStep[2].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].conversationStep[2].value.text", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).
@@ -134,7 +134,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[0].conversationStep[1].key", equalTo("actions")).
                 body("conversationSteps[0].conversationStep[1].value[0]", equalTo("greet")).
                 body("conversationSteps[0].conversationStep[2].key", equalTo("output:text:greet")).
-                body("conversationSteps[0].conversationStep[2].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[0].conversationStep[2].value.text", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).
@@ -152,7 +152,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(3)).
                 body("conversationSteps[2].conversationStep[2].key", equalTo("output:text:greet")).
-                body("conversationSteps[2].conversationStep[2].value", equalTo("Did we already say hi ?! Well, twice is better than not at all! ;-)")).
+                body("conversationSteps[2].conversationStep[2].value.text", equalTo("Did we already say hi ?! Well, twice is better than not at all! ;-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).
@@ -177,7 +177,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[6].key", equalTo("actions")).
                 body("conversationSteps[1].conversationStep[6].value[0]", equalTo("greet")).
                 body("conversationSteps[1].conversationStep[7].key", equalTo("output:text:greet")).
-                body("conversationSteps[1].conversationStep[7].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].conversationStep[7].value.text", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).
@@ -260,7 +260,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[6].key", equalTo("actions")).
                 body("conversationSteps[1].conversationStep[6].value[0]", equalTo("greet2")).
                 body("conversationSteps[1].conversationStep[7].key", equalTo("output:text:greet2")).
-                body("conversationSteps[1].conversationStep[7].value", equalTo("Hi there! Nice to meet up! :-)")).
+                body("conversationSteps[1].conversationStep[7].value.text", equalTo("Hi there! Nice to meet up! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).
@@ -393,11 +393,11 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(2)).
                 body("conversationSteps[1].conversationStep[8].key", equalTo("output:text:greet_personally")).
-                body("conversationSteps[1].conversationStep[8].value", equalTo("Hello John! Nice to meet you! :-)")).
+                body("conversationSteps[1].conversationStep[8].value.text", equalTo("Hello John! Nice to meet you! :-)")).
                 body("conversationSteps[1].conversationStep[9].key", equalTo("output:text:greet_personally:preTemplated")).
-                body("conversationSteps[1].conversationStep[9].value", equalTo("Hello [[${userInfo.username}]]! Nice to meet you! :-)")).
+                body("conversationSteps[1].conversationStep[9].value.text", equalTo("Hello [[${userInfo.username}]]! Nice to meet you! :-)")).
                 body("conversationSteps[1].conversationStep[10].key", equalTo("output:text:greet_personally:postTemplated")).
-                body("conversationSteps[1].conversationStep[10].value", equalTo("Hello John! Nice to meet you! :-)")).
+                body("conversationSteps[1].conversationStep[10].value.text", equalTo("Hello John! Nice to meet you! :-)")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).

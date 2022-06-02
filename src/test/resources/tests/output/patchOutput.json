@@ -10,7 +10,10 @@
             {
               "type": "text",
               "valueAlternatives": [
-                "Welcome! I am E.D.D.I.--changed-again!"
+                {
+                  "type": "text",
+                  "text": "Welcome! I am E.D.D.I.--changed-again!"
+                }
               ]
             }
           ]

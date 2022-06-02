@@ -38,20 +38,20 @@ public class RestOutputTest extends BaseCRUDOperations {
     public void readOutput() {
         assertRead(ROOT_PATH).
                 body("outputSet[1].action", equalTo("greet")).
-                body("outputSet[1].outputs[0].type", equalTo("text")).
-                body("outputSet[1].outputs[0].valueAlternatives[1]", equalTo("Hey you!"));
+                body("outputSet[1].outputs[0].valueAlternatives[1].type", equalTo("text")).
+                body("outputSet[1].outputs[0].valueAlternatives[1].text", equalTo("Hey you!"));
     }
 
     @Test(dependsOnMethods = "readOutput")
     public void updateOutput() {
         assertUpdate(TEST_JSON2, ROOT_PATH, RESOURCE_URI).
-                body("outputSet[0].outputs[0].valueAlternatives[0]", endsWith("--changed!"));
+                body("outputSet[0].outputs[0].valueAlternatives[0].text", endsWith("--changed!"));
     }
 
     @Test(dependsOnMethods = "updateOutput")
     public void patchOutput() {
         assertPatch(PATCH_JSON, ROOT_PATH, RESOURCE_URI).
-                body("outputSet[5].outputs[0].valueAlternatives[0]", endsWith("--changed-again!"));
+                body("outputSet[5].outputs[0].valueAlternatives[0].text", endsWith("--changed-again!"));
     }
 
     @Test(dependsOnMethods = "patchOutput")
