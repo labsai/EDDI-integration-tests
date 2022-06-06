@@ -67,8 +67,8 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 body("conversationSteps[2].conversationStep[12].key", equalTo("output:text:current_weather_in_city")).
                 body("conversationSteps[2].conversationStep[12].value.text", containsString("Vienna")).
                 body("conversationSteps[2].conversationStep[12].value", not(containsString("[["))).
-                body("conversationProperties.count.value", equalTo(3)).
-                body("conversationProperties.chosenCity.value", equalTo("Vienna")).
+                body("conversationProperties.count.valueInt", equalTo(3)).
+                body("conversationProperties.chosenCity.valueString", equalTo("Vienna")).
                 body("conversationProperties.chosenCity.scope", equalTo("conversation")).
                 body("conversationProperties.currentWeatherDescription", nullValue());
 
@@ -76,7 +76,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 false, true);
 
         response.then().assertThat().
-                body("conversationProperties.count.value", equalTo(4));
+                body("conversationProperties.count.valueInt", equalTo(4));
 
 
         //create new conversation, test longTerm memory
@@ -85,7 +85,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 false, true);
 
         response.then().assertThat().
-                body("conversationProperties.count.value", equalTo(6));
+                body("conversationProperties.count.valueInt", equalTo(6));
     }
 
     @Test
