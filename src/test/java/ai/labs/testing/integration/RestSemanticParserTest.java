@@ -97,6 +97,22 @@ public class RestSemanticParserTest extends BaseCRUDOperations {
                 body("expressions", hasItem("greeting(hello)"));
     }
 
+    @Test(dependsOnMethods = "runParserOnPhrase")
+    public void runParserOnRegEx() {
+        //test
+        Response response = given().
+                body("S123456").
+                contentType(ContentType.JSON).
+                post("/parser/" + resourceId.getId() + VERSION_STRING + resourceId.getVersion());
+
+        //assert
+        response.then().
+                assertThat().
+                statusCode(equalTo(200)).
+                body("expressions", hasItem("rallyid(standard)"));
+    }
+
+
     @AfterTest
     public void deleteConfigFiles() {
         //clean up regular dictionary

@@ -171,7 +171,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[0].key", equalTo("input:initial")).
                 body("conversationSteps[1].conversationStep[0].value", equalTo("hello")).
                 body("conversationSteps[1].conversationStep[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(hello)")).
+                //body("conversationSteps[1].conversationStep[2].value", equalTo("[{expressionSubCategory=false, expressionName=greeting, inputValue=hello, guistring=, fullExpression=null.greeting, subExpressions=[{expressionSubCategory=false, expressionName=hello, guistring=, fullExpression=null.hello, subExpressions=[]}]}]")).
                 body("conversationSteps[1].conversationStep[4].key", equalTo("behavior_rules:success")).
                 body("conversationSteps[1].conversationStep[4].value[0]", equalTo("Greeting")).
                 body("conversationSteps[1].conversationStep[6].key", equalTo("actions")).
@@ -198,7 +198,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[1].key", equalTo("input:normalized")).
                 body("conversationSteps[1].conversationStep[1].value", equalTo("good afternoon")).
                 body("conversationSteps[1].conversationStep[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(good_afternoon)")).
+                //body("conversationSteps[1].conversationStep[2].value", equalTo("[{expressionSubCategory=false, expressionName=greeting, inputValue=good afternoon, guistring=, fullExpression=null.greeting, subExpressions=[{expressionSubCategory=false, expressionName=good_afternoon, guistring=, fullExpression=null.good_afternoon, subExpressions=[]}]}]")).
                 body("environment", equalTo("unrestricted")).
                 body("conversationState", equalTo(Status.READY.toString())).
                 body("undoAvailable", equalTo(true)).
@@ -235,8 +235,8 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("botId", equalTo(botResourceId.getId())).
                 body("botVersion", equalTo(botResourceId.getVersion())).
                 body("conversationSteps", hasSize(3)).
-                body("conversationSteps[2].conversationStep[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[2].conversationStep[2].value", equalTo("quickReply(option1)"));
+                body("conversationSteps[2].conversationStep[2].key", equalTo("expressions:parsed"));
+                //body("conversationSteps[2].conversationStep[2].value", equalTo("[{expressionSubCategory=false, expressionName=quickReply, inputValue=Option 1, guistring=, fullExpression=null.quickReply, subExpressions=[{expressionSubCategory=false, expressionName=option1, guistring=, fullExpression=null.option1, subExpressions=[]}]}]"));
     }
 
     @Test
@@ -254,7 +254,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[1].key", equalTo("input:normalized")).
                 body("conversationSteps[1].conversationStep[1].value", equalTo("hi")).
                 body("conversationSteps[1].conversationStep[2].key", equalTo("expressions:parsed")).
-                body("conversationSteps[1].conversationStep[2].value", equalTo("greeting(hi)")).
+                //body("conversationSteps[1].conversationStep[2].value", equalTo("[{expressionSubCategory=false, expressionName=greeting, inputValue=hi, guistring=, fullExpression=null.greeting, subExpressions=[{expressionSubCategory=false, expressionName=hi, guistring=, fullExpression=null.hi, subExpressions=[]}]}]")).
                 body("conversationSteps[1].conversationStep[4].key", equalTo("behavior_rules:success")).
                 body("conversationSteps[1].conversationStep[4].value[0]", equalTo("Greeting")).
                 body("conversationSteps[1].conversationStep[6].key", equalTo("actions")).

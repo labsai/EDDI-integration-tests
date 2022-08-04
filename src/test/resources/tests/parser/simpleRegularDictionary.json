@@ -7,6 +7,12 @@
       "frequency": 0
     }
   ],
+  "regExs": [
+    {
+      "regEx": "[a-zA-Z][a-zA-Z]?\\d\\d\\d\\d\\d\\d\\d?",
+      "expressions": "rallyid(standard)"
+    }
+  ],
   "phrases": [
     {
       "phrase": "good afternoon",
