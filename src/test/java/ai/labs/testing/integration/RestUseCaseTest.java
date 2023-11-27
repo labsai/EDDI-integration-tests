@@ -48,7 +48,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
         String testUserId = "testUser" + RandomStringUtils.randomAlphanumeric(10);
         ResourceId conversationId = createConversation(resourceId.getId(), testUserId);
         sendUserInput(resourceId, conversationId, "weather",
-                false, true);
+                true, true);
 
         Response response = sendUserInput(resourceId, conversationId, "Vienna",
                 true, false);
@@ -64,17 +64,18 @@ public class RestUseCaseTest extends BaseCRUDOperations {
                 body("conversationSteps[1].conversationStep[5].value[0]", equalTo("ask_for_city")).
                 body("conversationSteps[2].conversationStep[6].key", equalTo("actions")).
                 body("conversationSteps[2].conversationStep[6].value[0]", equalTo("current_weather_in_city")).
-                body("conversationSteps[2].conversationStep[12].key", equalTo("output:text:current_weather_in_city")).
-                body("conversationSteps[2].conversationStep[12].value.text", containsString("Vienna")).
-                body("conversationSteps[2].conversationStep[12].value", not(containsString("[["))).
+                body("conversationSteps[2].conversationStep[13].key", equalTo("output:text:current_weather_in_city")).
+                body("conversationSteps[2].conversationStep[13].value.text", containsString("Vienna")).
+                body("conversationSteps[2].conversationStep[13].value", not(containsString("[["))).
                 body("conversationProperties.count.valueInt", equalTo(3)).
                 body("conversationProperties.chosenCity.valueString", equalTo("Vienna")).
                 body("conversationProperties.chosenCity.scope", equalTo("conversation")).
                 body("conversationProperties.currentWeatherDescription", nullValue());
 
         response = sendUserInput(resourceId, conversationId, "weather",
-                false, true);
+                true, true);
 
+        System.out.println(response.body().print());
         response.then().assertThat().
                 body("conversationProperties.count.valueInt", equalTo(4));
 
@@ -82,7 +83,7 @@ public class RestUseCaseTest extends BaseCRUDOperations {
         //create new conversation, test longTerm memory
         conversationId = createConversation(resourceId.getId(), testUserId);
         response = sendUserInput(resourceId, conversationId, "weather",
-                false, true);
+                true, true);
 
         response.then().assertThat().
                 body("conversationProperties.count.valueInt", equalTo(6));
