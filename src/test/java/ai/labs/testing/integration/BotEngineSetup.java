@@ -90,10 +90,6 @@ class BotEngineSetup extends BaseCRUDOperations {
         packageExtension.getExtensions().put("dictionaries", dictionaries.toArray());
 
         List<PackageConfiguration.PackageExtension> corrections = new ArrayList<>();
-        PackageConfiguration.PackageExtension stemming = createExtension("eddi://ai.labs.parser.corrections.stemming");
-        stemming.getConfig().put("language", "english");
-        stemming.getConfig().put("lookupIfKnown", "false");
-        corrections.add(stemming);
         PackageConfiguration.PackageExtension levenshtein = createExtension("eddi://ai.labs.parser.corrections.levenshtein");
         levenshtein.getConfig().put("distance", "2");
         corrections.add(levenshtein);
