@@ -34,7 +34,7 @@ public class RestBotEngineTest extends BaseCRUDOperations {
     public enum Status {
         READY,
         IN_PROGRESS,
-        //NOT_FOUND,
+        NOT_FOUND,
         ERROR,
         ENDED
     }
